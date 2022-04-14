@@ -31,7 +31,6 @@ class Constants(object, metaclass=Singleton):
             FileUtils.get_realpath(file=__file__)
             + "/../resources"
     )
-    DIR_RESOURCES_CNVRTR = DIR_RESOURCES + "/cnvrtr"
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ class SpecialWordCharA(ConvertAbstract):
         self.num_feat = self.max_len
         # self.FilterFunc = FilterFunc()
 
-        with open(Constants.DIR_RESOURCES_CNVRTR + "/special_word_char_dict.json", "r") as f:
+        with open(Constants.DIR_RESOURCES + "/special_word_char_dict.json", "r") as f:
             self.special_word_dict = json.load(f)
 
         self.SWtoken_Arr = self.special_word_dict["SWtoken_Arr"]

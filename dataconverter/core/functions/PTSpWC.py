@@ -13,7 +13,7 @@ from dataconverter.core.functions.SpWCAbstract import SpWCAbstract
 class PTSpWC(SpWCAbstract):
     @staticmethod
     def _load_special_word_dict() -> Tuple[dict, dict]:
-        keyword_map_path = "{}/{}".format(Constants.DIR_RESOURCES_CNVRTR, "PT_keywords_map.json")
+        keyword_map_path = "{}/{}".format(Constants.DIR_RESOURCES, "PT_keywords_map.json")
         f = open(keyword_map_path, "r")
         special_dict = json.loads(f.read())
         f.close()
