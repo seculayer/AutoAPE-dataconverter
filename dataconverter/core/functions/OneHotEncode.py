@@ -7,8 +7,8 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class OneHotEncode(ConvertAbstract):
-    def __init__(self, arg_list: list, stat_dict: dict):
-        super().__init__(arg_list=arg_list, stat_dict=stat_dict)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.unique_dict: dict = dict()
         self.unique_count = 0
 

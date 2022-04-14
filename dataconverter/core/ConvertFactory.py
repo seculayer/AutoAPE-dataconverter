@@ -3,7 +3,7 @@
 # e-mail : jinkim@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
-from dataconverter.core import ConvertAbstract
+from dataconverter.core.ConvertAbstract import ConvertAbstract
 from pycmmn.tools.DynamicClassLoader import DynamicClassLoader
 from dataconverter.core.ConvertFunctionInfo import ConvertFunctionInfo
 from dataconverter.common.Common import Common
@@ -26,13 +26,13 @@ class ConvertFactory(object):
                 packages=Common.CNVRTR_PACK_LIST,
                 class_nm=class_nm,
                 logger=logger
-            )(arg_list=fn_args, stat_dict=stat_dict)
+            )(arg_list=fn_args, stat_dict=stat_dict, logger=logger)
         except Exception as e:
             return DynamicClassLoader.load_multi_packages(
                 packages=Common.CNVRTR_PACK_LIST,
                 class_nm="NotNormal",
                 logger=logger
-            )(arg_list=list(), stat_dict=dict())
+            )(arg_list=list(), stat_dict=dict(), logger=logger)
 
 
 if __name__ == '__main__':
