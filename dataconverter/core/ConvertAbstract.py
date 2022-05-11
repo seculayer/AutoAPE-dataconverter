@@ -65,5 +65,5 @@ class ConvertAbstract(object):
         raise NotImplementedError
 
     @staticmethod
-    def _isBlank(_str):
+    def _isBlank(_str: str) -> bool:
         return not (_str and _str.strip())
