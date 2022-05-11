@@ -11,6 +11,15 @@ from typing import Optional
 
 
 class ConvertAbstract(object):
+    num_feat: int
+    LOGGER: Logger
+    stat_dict: dict
+    arg_list: list
+    split_separator: str
+    max_len: int
+    padding_val: int
+    error_log_flag: bool
+
     def __init__(
         self,
         arg_list: list = [],
