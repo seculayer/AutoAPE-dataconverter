@@ -3,6 +3,8 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+from __future__ import annotations
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
@@ -12,14 +14,12 @@ class EqpDtTokenizer(ConvertAbstract):
         self.num_feat = 2
 
     # 토크나이징 하는곳
-    def apply(self, data):
+    def apply(self, data: str) -> list[float]:
         try:
-            row = [float(data[8:10]), float(data[10:12])]
+            return [float(data[8:10]), float(data[10:12])]
         except Exception as e:
             # self.LOGGER.error(e)
-            row = [99., 99.]
-
-        return row
+            return [99.0, 99.0]
 
 
 if __name__ == "__main__":
