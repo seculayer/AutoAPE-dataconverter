@@ -3,31 +3,27 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2017 AI-TF Team
 
+from __future__ import annotations
+
 import math
+from typing import SupportsFloat, Union
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class DecimalScaleNormal(ConvertAbstract):
+    _max: int = 32767
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.max = 32767
 
-    def apply(self, data):
-        temp_result = 0.0
-        length = (math.log10(self.max) + 1)
-        length = math.modf(length)[1]
+    def apply(self, data: Union[str, float, SupportsFloat]) -> list[float]:
+        length = (math.log10(self._max) + 1) // 1
         try:
-            temp_result = float(data) / math.pow(10, length)
-            # temp_result = round(temp_result, length)
+            return [float(data) / math.pow(10, length)]
         except Exception as e:
-            # print log for error
             self.LOGGER.error(str(e))
-
-        finally:
-            # List로 return
-            result = list()
-            result.append(temp_result)
-            return result
+            return [0.0]
 
 
 if __name__ == "__main__":
