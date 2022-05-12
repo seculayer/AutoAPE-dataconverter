@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from logging import Logger
-from typing import Optional
+from typing import Union
 
 
 class ConvertAbstract(object):
@@ -74,5 +74,5 @@ class ConvertAbstract(object):
         raise NotImplementedError
 
     @staticmethod
-    def _isBlank(_str: str) -> bool:
-        return not (_str and _str.strip())
+    def _isBlank(_str: Union[str, bytes]) -> bool:
+        return not (_str and isinstance(_str, (str, bytes)) and _str.strip())
