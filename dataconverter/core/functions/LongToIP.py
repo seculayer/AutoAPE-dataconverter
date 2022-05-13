@@ -3,6 +3,8 @@
 # e-mail : syjo@seculayer.co.kr
 # Powered by Seculayer © 2018 AI-Core Team
 
+from __future__ import annotations
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
@@ -10,18 +12,18 @@ class LongToIP(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def apply(self, data):
-        result = 0
+    def apply(self, data: int) -> list[str]:
+        result = ""
 
         try:
-            result = self._longToIp(data)
+            result = self._long_to_ip(int(data))
         except Exception as e:
             self.LOGGER.error(e)
 
         return [result]
 
-    def _longToIp(self, ipint):
-        return '.'.join([str(ipint >> (i << 3) & 0xFF) for i in range(4)[::-1]])
+    def _long_to_ip(self, ipint: int) -> str:
+        return ".".join([str(ipint >> (i << 3) & 0xFF) for i in range(4)[::-1]])
 
 
 if __name__ == "__main__":
