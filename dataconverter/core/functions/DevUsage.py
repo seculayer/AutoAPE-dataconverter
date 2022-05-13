@@ -11,6 +11,10 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class DevUsage(ConvertAbstract):
+    """
+    장비의 사용률을 0~1 사이로 Normalize 한다
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1

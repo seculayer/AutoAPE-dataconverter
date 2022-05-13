@@ -9,6 +9,10 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class EqpDtTokenizer(ConvertAbstract):
+    """
+    장비 발생 시각에서 시간과 분을 추출한다.
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 2

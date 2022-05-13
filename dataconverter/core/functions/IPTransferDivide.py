@@ -9,6 +9,10 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class IPTransferDivide(ConvertAbstract):
+    """
+    ip 주소를 '.'으로 split하여 반환한다
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 4
