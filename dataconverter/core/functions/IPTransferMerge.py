@@ -3,6 +3,10 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+from __future__ import annotations
+
+from typing import Union
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
@@ -12,7 +16,7 @@ class IPTransferMerge(ConvertAbstract):
         self.num_feat = 1
 
     # 토크나이징 하는곳
-    def apply(self, data):
+    def apply(self, data: Union[tuple, list]):
         try:
             data1 = data[0]
             data2 = data[1]
