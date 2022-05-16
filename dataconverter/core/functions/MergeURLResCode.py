@@ -3,32 +3,39 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+from __future__ import annotations
+
+from typing import Union
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class MergeURLResCode(ConvertAbstract):
+    _input_type: str
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
-        self.input_type = self.arg_list[0]
+        self._input_type = self.arg_list[0]
 
-    def apply(self, data):
-
+    def apply(self, data: list[str]) -> list[str]:
         try:
             # data = data.split(self.split_separator)
             # self.LOGGER.error("data?????? {}".format(data))
-            data1 = None
-            data2 = None
-            data1_flag = 'str'
-            data2_flag = 'str'
+            data1: Union[None, int, str] = None
+            data2: Union[None, int, str] = None
+            data1_flag = "str"
+            data2_flag = "str"
+
             try:
                 data1 = int(data[0])
-                data1_flag = 'int'
+                data1_flag = "int"
             except:
                 data1 = data[0]
+
             try:
                 data2 = int(data[1])
-                data2_flag = 'int'
+                data2_flag = "int"
             except:
                 data2 = data[1]
 
@@ -36,14 +43,14 @@ class MergeURLResCode(ConvertAbstract):
             url = None
 
             if data2_flag == "int":
-                url = data1
+                url = str(data1)
                 res_code = data2
 
             else:
                 res_code = data1
-                url = data2
+                url = str(data2)
 
-            if self.input_type == 0:
+            if self._input_type == 0:
                 url_split_list = url.split(" ")
                 url = url_split_list[1]
             else:
@@ -60,13 +67,12 @@ class MergeURLResCode(ConvertAbstract):
             return [result_str]
 
         except Exception as e:
-
             self.LOGGER.error(e, exc_info=True)
             return ["#PADDING#|#PADDING#"] * self.num_feat
 
 
 if __name__ == "__main__":
-    payload_list =[
+    payload_list = [
         ["200", "www.g2b.go.kr:8081/pt/menu/selectSubFrame.do"],
         ["200", "www.g2b.go.kr:8081/main"],
         ["200", "www.g2b.go.kr:8081/ingam/ingam.jsp"],
