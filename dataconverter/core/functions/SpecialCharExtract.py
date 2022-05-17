@@ -3,6 +3,8 @@
 # e-mail : jinkim@seculayer.co.kr
 # Powered by Seculayer © 2017-2018 AI Core Team, Intelligence R&D Center.
 
+from __future__ import annotations
+
 import re
 import urllib.parse as decode
 
@@ -16,7 +18,7 @@ class SpecialCharExtract(ConvertAbstract):
         self.num_feat = self.max_len
         self.padding_val = 0.
 
-    def apply(self, data):
+    def apply(self, data: str) -> list[float]:
         # URL Decode
         try:
             data = data.replace("\\/", "/")
@@ -26,11 +28,11 @@ class SpecialCharExtract(ConvertAbstract):
 
         # replace
         try:
-            rep_data = re.findall(r'[\W_]', dec_data)
+            rep_data = re.findall(r"[\W_]", dec_data)
         except:
             rep_data = dec_data
 
-        result = list()
+        result = []
         for i, ch in enumerate(rep_data):
             if i >= self.max_len:
                 break
@@ -46,7 +48,7 @@ class SpecialCharExtract(ConvertAbstract):
             result.extend(padding)
             return result
         else:
-            return result[:self.max_len]
+            return result[: self.max_len]
 
     def get_num_feat(self):
         return self.max_len
@@ -66,7 +68,7 @@ class SpecialCharExtract(ConvertAbstract):
         return rst_list
 
     def get_original_idx(self, cvt_data, original_data):
-        rst_list = list()
+        rst_list = []
         find_from = 0
         data = original_data.replace("\\/", "/")
         for _ in range(5):
@@ -79,7 +81,9 @@ class SpecialCharExtract(ConvertAbstract):
 
             if s_idx == -1:
                 if "PADDING" not in token:
-                    self.LOGGER.error(f"Can't find token : [{token}], original_data : [{data}]")
+                    self.LOGGER.error(
+                        f"Can't find token : [{token}], original_data : [{data}]"
+                    )
                 continue
 
             e_idx = s_idx + len(token) - 1
@@ -89,7 +93,7 @@ class SpecialCharExtract(ConvertAbstract):
         return rst_list, data
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _data = "https://stackoverflow.com/questions/16566069/url-decode-utf-8-in-python白萬基"
     cvt_fn = SpecialCharExtract(stat_dict=None, arg_list=[1000])
 
