@@ -3,6 +3,8 @@
 # e-mail : syjo@seculayer.co.kr
 # Powered by Seculayer © 2018 AI-Core Team
 
+from __future__ import annotations
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
@@ -10,12 +12,9 @@ class Trim(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def apply(self, data):
-        result = ''
-
-        # check blank
-        if self._isBlank(data) :
-            return [result]
+    def apply(self, data: str) -> list[str]:
+        if self._isBlank(data):
+            return [""]
 
         return [data.strip()]
 
