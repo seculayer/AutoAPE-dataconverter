@@ -11,8 +11,8 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 class TimeToSerial(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.input_type = int(self.arg_list[0]) # 0 : one day, 1 : one week, 2 : one month
-        self.interval = int(self.arg_list[1]) # unit : minute
+        self.input_type = 1  # int(self.arg_list[0])  # 0 : one day, 1 : one week, 2 : one month
+        self.interval = 60  # int(self.arg_list[1])  # unit : minute
         if int(self.interval < 1):
             self.interval = 1
         self.num_feat = 1
@@ -51,7 +51,7 @@ class TimeToSerial(ConvertAbstract):
 
             result_list = list()
             # self.LOGGER.error("----------result : {}".format(result))
-            result_list.append(result)
+            result_list.append(float(result))
 
             return result_list
 
