@@ -2,10 +2,10 @@
 # Author : Jin Kim
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2021 Service Model Team, R&D Center.
-
+import math
 import urllib.parse as decode
 import re
-from typing import Tuple
+from typing import Tuple, List, Union
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
@@ -37,7 +37,7 @@ class SpWCAbstract(ConvertAbstract):
         usage - get extra info : special_word[key][info1]
         """
 
-        self.special_word, self.special_regex = self._load_special_word_dict()
+        self.special_word, self.reverse_dict, self.special_regex = self._load_special_word_dict()
 
         """
         arg_list[1] = padding value
@@ -48,7 +48,7 @@ class SpWCAbstract(ConvertAbstract):
             self.padding_val = 0
 
     @staticmethod
-    def _load_special_word_dict() -> Tuple[dict, dict]:
+    def _load_special_word_dict() -> Tuple[dict, dict, dict]:
         raise NotImplementedError
 
     def apply(self, data) -> list:
@@ -58,6 +58,60 @@ class SpWCAbstract(ConvertAbstract):
         data = self._tokenize(data)
         data = self._convert_value(data)
         return self._padding_proc(data)
+
+    def reverse(self, data, original_data) -> List:
+        rst_list = list()
+        find_from = 0
+        original_data = original_data.replace("\\/", "/")
+        for _ in range(5):
+            original_data = decode.unquote(original_data)
+        original_data = original_data.lower()
+
+        for i, feature in enumerate(data):
+            if feature == self.padding_val:
+                rst_list.append(f"{i}_PADDING")
+            else:
+                origin_word_list = self.reverse_dict[str(int(feature))]
+                min_sidx = math.inf
+                accept_token = None
+                backup_find_from = find_from
+                for word in origin_word_list:
+                    search_idx = original_data.find(word, backup_find_from)
+
+                    if min_sidx > search_idx > -1:
+                        min_sidx = search_idx
+                        find_from = search_idx + len(word)
+                        accept_token = word
+
+                if accept_token is not None:
+                    rst_list.append(accept_token)
+                else:
+                    continue
+
+        return rst_list
+
+    def get_original_idx(self, cvt_data, original_data):
+        rst_list = list()
+        column_list = list()
+        find_from = 0
+        data = original_data.replace("\\/", "/")
+        for _ in range(5):
+            data = decode.unquote(data)
+        data = data.lower()
+
+        for token in self.reverse(cvt_data, original_data):
+            s_idx = data.find(token, find_from)
+
+            if s_idx == -1:
+                if "PADDING" not in token:
+                    self.LOGGER.error(f"Can't find token : [{token}], original_data : [{data}]")
+                continue
+
+            e_idx = s_idx + len(token) - 1
+            rst_list.append([s_idx, e_idx])
+            find_from = e_idx + 1
+
+        return rst_list, data
 
     def remove_common_word(self, data) -> list:
         data = self._replace_basic(data)
@@ -98,7 +152,7 @@ class SpWCAbstract(ConvertAbstract):
 
     @staticmethod
     def _tokenize(data: str) -> list:
-        key_set = list(set(re.findall(r'[^a-zA-z]|[_]', data)))
+        key_set = list(set(re.findall(r'[^a-zA-Z0-9]|[_]', data)))
         for key in key_set:
             if key != " ":
                 data = data.replace(str(key), ' ' + str(key) + ' ').replace("  ", " ")

@@ -12,12 +12,14 @@ from dataconverter.core.functions.SpWCAbstract import SpWCAbstract
 
 class XSSpWC(SpWCAbstract):
     @staticmethod
-    def _load_special_word_dict() -> Tuple[dict, dict]:
+    def _load_special_word_dict() -> Tuple[dict, dict, dict]:
         keyword_map_path = "{}/{}".format(Constants.DIR_RESOURCES, "XS_keywords_map.json")
         f = open(keyword_map_path, "r")
-        special_dict = json.loads(f.read())
+        tmp_dict = json.loads(f.read())
+        special_dict = tmp_dict[0]
+        reverse_dict = tmp_dict[1]
         f.close()
-        return special_dict, {}
+        return special_dict, reverse_dict, {}
 
     def processConvert(self, data):
         return self.apply(data)

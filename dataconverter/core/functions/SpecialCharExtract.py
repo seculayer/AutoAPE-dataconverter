@@ -14,6 +14,7 @@ class SpecialCharExtract(ConvertAbstract):
         super().__init__(**kwargs)
         self.max_len = int(self.arg_list[0])
         self.num_feat = self.max_len
+        self.padding_val = 0.
 
     def apply(self, data):
         # URL Decode
@@ -36,12 +37,12 @@ class SpecialCharExtract(ConvertAbstract):
             try:
                 result.append(float(ord(ch)))
             except:
-                result.append(255.)
+                result.append(self.padding_val)
 
         result_len = len(result)
         # padding
         if result_len < self.max_len:
-            padding = [255.]*(self.max_len - result_len)
+            padding = [self.padding_val]*(self.max_len - result_len)
             result.extend(padding)
             return result
         else:
@@ -50,14 +51,15 @@ class SpecialCharExtract(ConvertAbstract):
     def get_num_feat(self):
         return self.max_len
 
-    def reverse(self, data):
+    def reverse(self, data, original_data):
         rst_list = list()
         for i in range(len(data)):
             if type(data[i]) == float or type(data[i]) == int:
                 if data[i] == 255:
                     rst_list.append(f"{i}_PADDING")
                 elif data[i] == 0:
-                    rst_list.append("NULL")
+                    # rst_list.append("NULL")
+                    rst_list.append(f"{i}_PADDING")
                 else:
                     rst_list.append(chr(int(data[i])))
 
@@ -70,7 +72,7 @@ class SpecialCharExtract(ConvertAbstract):
         for _ in range(5):
             data = decode.unquote(data)
 
-        for token in self.reverse(cvt_data):
+        for token in self.reverse(cvt_data, original_data):
             if token == "NULL":
                 token = chr(0)
             s_idx = data.find(token, find_from)
