@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dataconverter"
-version = "1.0."
+version = "1.0.0"
 description = "AutoML Projec: Data Converter"
 authors = ["Jin Kim <jin.kim@seculayer.com>"]
 
