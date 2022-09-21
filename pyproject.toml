@@ -1,9 +1,7 @@
 [tool.poetry]
 name = "dataconverter"
 version = "1.0."
-description = """SecuLayer Inc. AutoML Project
-Module : Data Converter
-"""
+description = "AutoML Projec: Data Converter"
 authors = ["Jin Kim <jin.kim@seculayer.com>"]
 
 [tool.poetry.dependencies]
