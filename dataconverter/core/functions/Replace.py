@@ -3,6 +3,10 @@
 # e-mail : syjo@seculayer.co.kr
 # Powered by Seculayer © 2018 AI-Core Team
 
+from __future__ import annotations
+
+from typing import Any
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
@@ -10,16 +14,16 @@ class Replace(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def apply(self, data):
-        result = ''
+    def apply(self, data: Any) -> list[str]:
+        result = ""
 
         # check blank
         if self._isBlank(data):
             return [result]
 
-        strOld = ''
-        strNew = ''
-        if len(self.arg_list) >= 2 :
+        strOld = ""
+        strNew = ""
+        if len(self.arg_list) >= 2:
             strOld = self.arg_list[0]
             strNew = self.arg_list[1]
         else:

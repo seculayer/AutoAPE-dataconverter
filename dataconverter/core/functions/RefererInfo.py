@@ -3,6 +3,8 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+from __future__ import annotations
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
@@ -11,7 +13,7 @@ class RefererInfo(ConvertAbstract):
         super().__init__(**kwargs)
         self.num_feat = 1
 
-    def apply(self, data):
+    def apply(self, data: str) -> list[str]:
 
         try:
 
@@ -26,9 +28,7 @@ class RefererInfo(ConvertAbstract):
 
 
 if __name__ == "__main__":
-    payload_list = [
-        "www.g2b.go.kr:8081/gov/koneps/co.css/base.css"
-    ]
+    payload_list = ["www.g2b.go.kr:8081/gov/koneps/co.css/base.css"]
     # payload = ["www.g2b.go.kr:8081/pt/menu/selectSubFrame.do"]
     tokenizer = RefererInfo(stat_dict=None, arg_list=[1])
     for payload in payload_list:

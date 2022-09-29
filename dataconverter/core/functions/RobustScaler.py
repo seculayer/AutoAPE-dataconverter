@@ -3,10 +3,19 @@
 # e-mail : manki.baek@seculayer.com
 # Powered by Seculayer © 2021 Service Model Team, Intelligence R&D Center.
 
+from __future__ import annotations
+
+from typing import SupportsFloat, Union
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class RobustScaler(ConvertAbstract):
+    median: float
+    quantile_1: float
+    quantile_3: float
+    IQR: float
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         try:
@@ -19,24 +28,21 @@ class RobustScaler(ConvertAbstract):
             self.quantile_3 = 0
         self.IQR = self.quantile_3 - self.quantile_1
 
-    def apply(self, data):
+    def apply(self, data: Union[SupportsFloat, str, float]) -> list[float]:
         try:
             if self.IQR == 0:
                 self.IQR = 1
                 self.LOGGER.warn("IQR val is zero")
-            temp_result = (float(data) - float(self.median)) / float(self.IQR)
+            result = (float(data) - float(self.median)) / float(self.IQR)
         except Exception as e:
             # print log for error
             self.LOGGER.error(str(e))
-            temp_result = 0.0
+            result = 0.0
 
-        # List return
-        result = list()
-        result.append(temp_result)
-        return result
+        return [result]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     minmax_normalization = RobustScaler(
         stat_dict={"median": 128, "quantile_1": 64, "quantile_3": 192}, arg_list=None
     )

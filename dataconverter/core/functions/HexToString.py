@@ -3,37 +3,44 @@
 # e-mail : syjo@seculayer.co.kr
 # Powered by Seculayer © 2018 AI-Core Team
 
+from __future__ import annotations
+
 import binascii
+from typing import Union
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class HexToString(ConvertAbstract):
+    _charset: str = "utf-8"
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.charSet = self.arg_list[0]
+        if (
+            len(self.arg_list) > 1
+            and isinstance(self.arg_list[0], str)
+            and not self._isBlank(self.arg_list[0])
+        ):
+            self._charset = self.arg_list[0].strip()
 
-    def apply(self, data):
-        # check blank
-        result = ''
+    def apply(self, data: Union[str, bytes]) -> list[str]:
         if self._isBlank(data):
-            return [result]
+            return [""]
 
         # init charset
-        if self._isBlank(self.charSet):
-            self.charSet = 'UTF-8'
+        if not self._isBlank(self._charset):
+            self._charset = "UTF-8"
 
         # check string
-        if isinstance(data, str):
-            data = data.encode(self.charSet)
+        if isinstance(data, str):      
+            data = data.encode(self._charset)
 
         try:
             result = binascii.unhexlify(data)
-            result = result.decode(self.charSet)
+            return [result.decode(self._charset)]
         except Exception as e:
             self.LOGGER.error(e)
-
-        return [result]
+            return [""]
 
 
 if __name__ == "__main__":

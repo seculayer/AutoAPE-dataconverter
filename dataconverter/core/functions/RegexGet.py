@@ -8,9 +8,11 @@ import re
 
 
 class RegexGet(ConvertAbstract):
+    _regex_pattern: re.Pattern
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.reg = re.compile(self.arg_list[0])
+        self._regex_pattern = re.compile(self.arg_list[0])
 
     def apply(self, data):
         result = ''
@@ -20,9 +22,9 @@ class RegexGet(ConvertAbstract):
             return [result]
 
         try:
-            result = self.reg.match(data).groups()
-            if len(result) > 0:
-                result = result[0]
+            matches = self._regex_pattern.match(data)
+            if matches:
+                result = matches.groups()[0]
         except Exception as e:
             self.LOGGER.error(str(e))
             result = ''

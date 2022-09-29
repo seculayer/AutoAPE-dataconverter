@@ -3,42 +3,38 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2017 AI-TF Team
 
-######################################################################################
-###### import modules ######
-### python basic
-### dataconverter
+from __future__ import annotations
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
-######################################################################################
-# class : ZScoreNormal
 class ZScoreNormal(ConvertAbstract):
+    mean: float
+    stddev: float
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         try:
-            self.mean = self.stat_dict["avg"]    ## the mean of the normal distribution
-            self.stddev = self.stat_dict["stddev"]       ## the standard deviation of the normal distribution
+            # the mean of the normal distribution
+            self.mean = float(self.stat_dict["avg"])
+            # the standard deviation of the normal distribution
+            self.stddev = float(self.stat_dict["stddev"])
         except:
             self.mean = 0
             self.stddev = 0
 
-    def apply(self, data):
+    def apply(self, data: float) -> list[float]:
         try:
             if self.stddev == 0:
                 self.stddev = 1
-                self.LOGGER.warn("Standard Deviation value is zero")
-            temp_result = (float(data) - float(self.mean)) / float(self.stddev)
+                self.LOGGER.warning("Standard Deviation value is zero")
+            return [(float(data) - float(self.mean)) / float(self.stddev)]
         except Exception as e:
-            ## print log for error
-            self.LOGGER.get_logger().error(str(e))
-            temp_result = [0.0]
-        ## List return
-        result = list()
-        result.append(temp_result)
-        return result
+            self.LOGGER.error(e)
+            return [0.0]
 
 
 if __name__ == "__main__":
     val = 2
-    zscr_normal = ZScoreNormal(stat_dict={"avg" : 1, "stddev" : 0.1}, arg_list=list())
+    zscr_normal = ZScoreNormal(stat_dict={"avg": 1, "stddev": 0.1})
     print(zscr_normal.apply(val))

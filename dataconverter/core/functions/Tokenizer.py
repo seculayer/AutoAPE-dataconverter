@@ -3,8 +3,10 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2017 AI-TF Team
 
-import urllib.parse as decode
+from __future__ import annotations
+
 import re
+import urllib.parse as decode
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
@@ -16,50 +18,56 @@ class Tokenizer(ConvertAbstract):
         self.num_feat = self.max_len
 
     # 토크나이징 하는곳
-    def apply(self, data):
+    def apply(self, data: str) -> list[str]:
 
         # URL Decode
         try:
-            data = data.replace("\r\n", " ").replace("\n", " ").replace("\t", " ").replace("  ", " ").replace("  ", " ")
+            data = (
+                data.replace("\r\n", " ")
+                .replace("\n", " ")
+                .replace("\t", " ")
+                .replace("  ", " ")
+                .replace("  ", " ")
+            )
 
-            _input = data
-            _input = _input.replace("CCOMMAA", ",")
+            _input = data.replace("CCOMMAA", ",")
 
             try:
-                iLoopCnt = 0
                 val = ""
-                while val != _input or iLoopCnt <= 5:
-                    val = _input
-                    iLoopCnt += 1
+                for _ in range(6):
+                    if val == _input:
+                        break
                     _input = decode.unquote(_input.upper())
+
                 dec_data = _input.lower()
             except:
                 dec_data = str(_input).lower()
         except:
             dec_data = data
-            if dec_data == None:
+            if dec_data is None:
                 dec_data = ""
 
-        rep_data = dec_data.replace('#CRLF#', '')  # CRLF가 붙어 올 경우 삭제
-        rep_data = re.sub(r'\s+', " ", re.sub(r'[\W_]', " \g<0> ", re.sub(r'[^0-9a-zA-Z\W_]', "", rep_data)))
+        rep_data = dec_data.replace("#CRLF#", "")  # CRLF가 붙어 올 경우 삭제
+        rep_data = re.sub(
+            r"\s+",
+            " ",
+            re.sub(r"[\W_]", r" \g<0> ", re.sub(r"[^0-9a-zA-Z\W_]", "", rep_data)),
+        )
 
         result = rep_data.split(" ")
         result_len = len(result)
 
         # padding
         if result_len < self.max_len:
-            padding = ['#PADDING#'] * (self.max_len - result_len)
-            # padding = ['#PADDING#' for _ in range(self.max_len - result_len)]
+            padding = ["#PADDING#"] * (self.max_len - result_len)
             result.extend(padding)
         else:
-            result = result[:self.max_len]
-            # print(len(result))
+            result = result[: self.max_len]
 
-        # print(result)
         return result
 
-    def get_num_feat(self):
-        return self.max_len
+    def get_num_feat(self) -> int:
+        return self.num_feat
 
 
 if __name__ == "__main__":

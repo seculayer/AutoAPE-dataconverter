@@ -3,10 +3,29 @@
 # e-mail : jinkim@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+from __future__ import annotations
+
+import logging
+from logging import Logger
+from typing import Union
+
 
 class ConvertAbstract(object):
+    num_feat: int
+    LOGGER: Logger
+    stat_dict: dict
+    arg_list: list
+    split_separator: str
+    max_len: int
+    padding_val: int
+    error_log_flag: bool
 
-    def __init__(self, arg_list: list, stat_dict: dict, logger):
+    def __init__(
+        self,
+        arg_list: list = [],
+        stat_dict: dict = {},
+        logger: Logger = logging.getLogger(),
+    ):
         self.num_feat = 1
         self.LOGGER = logger
         self.stat_dict = stat_dict
@@ -20,7 +39,7 @@ class ConvertAbstract(object):
     def processConvert(self, data):
         raise NotImplementedError
 
-    def apply(self, data):
+    def apply(self, data) -> list:
         arr_ret = list()
 
         try:
@@ -38,7 +57,7 @@ class ConvertAbstract(object):
                 arr_ret.extend(padding)
                 return arr_ret
 
-            return arr_ret[:self.max_len]
+            return arr_ret[: self.max_len]
 
         except Exception as e:
             self.LOGGER.error("cvt Exception: {}".format(e))
@@ -55,5 +74,5 @@ class ConvertAbstract(object):
         raise NotImplementedError
 
     @staticmethod
-    def _isBlank(_str):
-        return not (_str and _str.strip())
+    def _isBlank(_str: Union[str, bytes]) -> bool:
+        return not (_str and isinstance(_str, (str, bytes)) and _str.strip())

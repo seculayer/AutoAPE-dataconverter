@@ -3,35 +3,34 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+from __future__ import annotations
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class IPNormal(ConvertAbstract):
+    _max: int = 255
+    _min: int = 0
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.max = 255
-        self.min = 0
         self.num_feat = 4
 
-    def apply(self, data):
+    def apply(self, data: str) -> list[float]:
+        if not isinstance(data, (str, bytes)):
+            return [0.0, 0.0, 0.0, 0.0]
+
         ip_split = data.split(".")
         if len(ip_split) != self.num_feat:
             return [0.0, 0.0, 0.0, 0.0]
 
-        norm = self.max - self.min
-        result = list()
+        norm = self._max - self._min
         try:
-            for ip in ip_split:
-                # Normalization
-                result.append((float(ip) - self.min) / norm)
-                # result.append(float(ip) / 255)
+            return [(float(ip) - self._min) / norm for ip in ip_split]
         except Exception as e:
             # print log for error
             self.LOGGER.error(str(e))
-            result = [0.0, 0.0, 0.0, 0.0]
-
-        # List return
-        return result
+            return [0.0, 0.0, 0.0, 0.0]
 
 
 if __name__ == "__main__":

@@ -3,38 +3,47 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
+
+from __future__ import annotations
+
+import string
+from typing import Union
+
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class BasicNormal(ConvertAbstract):
+    _max: int = 32767
+    _min: int = 0
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.max = 32767
-        self.min = 0
 
-    def apply(self, data):
-        norm = self.max - self.min
-        if data is None:
-            data = "0"
-        data = data.replace(" ", "")
+    def apply(
+        self, data: Union[int, float, str, bytes, bytearray]
+    ) -> list[Union[str, float]]:
+        if not data:
+            data = 0
 
-        v = 0
-        # string이 문자로만 구성되어 있는지 확인
-        if data.isalpha():
-            alpha = "abcdefghijklmnopqrstuvwxyz"
-            temp = data.lower()
-            for idx in range(len(temp)):
-                v += alpha.find(temp[idx])
-        temp_result = ""
+        if isinstance(data, str) and data.isalpha():
+            lower_text = data.replace(" ", "").lower()
+            data = sum(map(lambda x: string.ascii_lowercase.find(x), lower_text))
+
+        if isinstance(data, (bytes, bytearray)) and data.isalpha():
+            lower_bytes = data.replace(b" ", b"").lower()
+            data = sum(
+                map(lambda x: string.ascii_lowercase.encode().find(x), lower_bytes)
+            )
+
+        norm = self._max - self._min
+        result: Union[float, str] = ""
         try:
-            temp_result = (float(v) - self.min) / norm
+            result = (float(data) - self._min) / norm
         except Exception as e:
             self.LOGGER.error(e)
 
         # List return
-        result = list()
-        result.append(temp_result)
-        return result
+        return [result]
 
 
 if __name__ == "__main__":
