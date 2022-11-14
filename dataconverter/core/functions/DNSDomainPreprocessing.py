@@ -10,7 +10,7 @@ from dataconverter.core.functions.StringLength import StringLength
 class DNSDomainPreprocessing(ConvertAbstract):
     def __init__(self, **kwargs):
         super(DNSDomainPreprocessing, self).__init__(**kwargs)
-        self.num_feat = 4
+        self.num_feat = 3
 
         self.cvt_str_len = StringLength()
         self.cvt_cv = StringConsVowelCounter(arg_list=["all"])
