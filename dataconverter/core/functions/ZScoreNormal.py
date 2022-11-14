@@ -9,8 +9,8 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class ZScoreNormal(ConvertAbstract):
-    mean: float
-    stddev: float
+    # mean: float
+    # stddev: float
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
