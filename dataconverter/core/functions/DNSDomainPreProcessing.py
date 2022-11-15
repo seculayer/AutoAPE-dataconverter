@@ -7,9 +7,9 @@ from dataconverter.core.functions.StringConsVowelCounter import StringConsVowelC
 from dataconverter.core.functions.StringLength import StringLength
 
 
-class DNSDomainPreprocessing(ConvertAbstract):
+class DNSDomainPreProcessing(ConvertAbstract):
     def __init__(self, **kwargs):
-        super(DNSDomainPreprocessing, self).__init__(**kwargs)
+        super(DNSDomainPreProcessing, self).__init__(**kwargs)
         self.num_feat = 3
 
         self.cvt_str_len = StringLength()
@@ -30,5 +30,5 @@ class DNSDomainPreprocessing(ConvertAbstract):
 
 if __name__ == '__main__':
     _data = "www.google.com"
-    cvt = DNSDomainPreprocessing()
+    cvt = DNSDomainPreProcessing()
     print(cvt.apply(_data))
