@@ -7,23 +7,36 @@ from logging import Logger
 
 import numpy as np
 
-from dataconverter.common.Common import Common
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 # DNS VT Meta
-class PopularityRank(ConvertAbstract):
+class VTPopularityRank(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.site_key = self.arg_list[0]
+
+        self.site_key = self._site_key_map(self.arg_list[0])
+
+    @staticmethod
+    def _site_key_map(site_key):
+        site_dict = {
+            "majestic": "Majestic",
+            "cisco": "Cisco Umbrella",
+            "statvoo": "Statvoo",
+            "alexa": "Alexa",
+            "quantcast": "Quantcast"
+        }
+        return site_dict.get(site_key, None)
 
     def apply(self, data) -> list:
         try:
-            data_dict = json.loads(data)
+            if isinstance(data, list):
+                data_dict = json.loads(data[0])
+                return [int(data_dict.get(self.site_key, {}).get("rank", 9999999))]
         except Exception as e:
-            return np.nan
+            return [np.nan]
 
-        return int(data_dict.get(self.site_key, {}).get("rank", 9999999))
+        return [0.0]
 
     def processConvert(self, data):
         return self.apply(data)
@@ -36,7 +49,7 @@ class PopularityRank(ConvertAbstract):
 
 
 if __name__ == '__main__':
-    data = {"query": "aka.ms", "query_ip": "104.87.239.185", "tag_ctas_ti": "N", "anal_simhash_score": 0.0,
+    _data = {"query": "aka.ms", "query_ip": "104.87.239.185", "tag_ctas_ti": "N", "anal_simhash_score": 0.0,
             "mal_similr:": "N", "anal_jaro_score": 0.47, "anal_leven_score": 8.0,
             "vt_whois_createDate": "2011-01-20T16:48:05.686Z", "not_before": ["2022-10-13 21:29:19"],
             "vt_whois_updateDate": "2021-12-13T19:01:59.181Z", "vt_whois_regist_country": "US",
@@ -47,8 +60,8 @@ if __name__ == '__main__':
             "total_votes": ["{\"malicious\":6,\"harmless\":1}"], "popularity_ranks": [
             "{\"Quantcast\":{\"rank\":1088,\"timestamp\":1585841763},\"Cisco Umbrella\":{\"rank\":6967,\"timestamp\":1667321881},\"Alexa\":{\"rank\":189512,\"timestamp\":1667235484},\"Statvoo\":{\"rank\":10679,\"timestamp\":1667408281},\"Majestic\":{\"rank\":1250,\"timestamp\":1667408281}}"],
             "resolutions_count": ["200"], "vt_whois_expiryDate": "2023-01-20T16:48:05.705Z",
-            "dns_recode_recode_ttl": ["521", "300", "300", "521", "300", "521", "300", "21600", "300", "521", "300",
+             "dns_recode_recode_ttl": ["521", "300", "300", "521", "300", "521", "300", "21600", "300", "521", "300",
                                       "521", "300", "521", "300", "300", "521", "300", "300", "521", "12", "300"]}
 
-    converter = PopularityRank(arg_list=["Alexa"], stat_dict={}, logger=None)
-    print(converter.apply(data.get("popularity_ranks")[0]))
+    converter = VTPopularityRank(arg_list=["alexa"], stat_dict={}, logger=None)
+    print(converter.apply(_data.get("popularity_ranks")))

@@ -37,7 +37,7 @@ class ConvertAbstract(object):
         self.error_log_flag = False
 
     def processConvert(self, data):
-        raise NotImplementedError
+        return self.apply(data)
 
     def apply(self, data) -> list:
         arr_ret = list()
