@@ -16,7 +16,11 @@ class VTMalicious(ConvertAbstract):
     def apply(self, data) -> list:
         try:
             if isinstance(data, list):
-                return [float(json.loads(data[0]).get("malicious"))]
+                try:
+                    return [float(json.loads(data[0]).get("malicious"))]
+                except json.decoder.JSONDecodeError:
+                    rpl_data = data[0].replace('\'', '"')
+                    return [float(json.loads(rpl_data).get("malicious"))]
         except Exception as e:
             return [0.0]
         return [0.0]

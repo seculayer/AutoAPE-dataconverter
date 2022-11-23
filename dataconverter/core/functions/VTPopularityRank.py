@@ -31,7 +31,12 @@ class VTPopularityRank(ConvertAbstract):
     def apply(self, data) -> list:
         try:
             if isinstance(data, list):
-                data_dict = json.loads(data[0])
+                try:
+                    data_dict = json.loads(data[0])
+                except json.decoder.JSONDecodeError:
+                    rpl_data = data[0].replace('\'', '"')
+                    data_dict = json.loads(rpl_data)
+
                 return [int(data_dict.get(self.site_key, {}).get("rank", 9999999))]
         except Exception as e:
             return [np.nan]

@@ -13,15 +13,23 @@ class DateDiff(ConvertAbstract):
 
         self.num_feat = 1
         self.datetime_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+        self.datetime_format2 = "%Y-%m-%d"
 
     def apply(self, data) -> list:
         try:
             if isinstance(data, list):
-                return[
-                    (datetime.datetime.strptime(data[1], self.datetime_format)
-                     - datetime.datetime.strptime(data[0], self.datetime_format)
-                     ).days
-                ]
+                try:
+                    return[
+                        (datetime.datetime.strptime(data[1], self.datetime_format)
+                         - datetime.datetime.strptime(data[0], self.datetime_format)
+                         ).days
+                    ]
+                except ValueError:
+                    return[
+                        (datetime.datetime.strptime(data[1], self.datetime_format2)
+                         - datetime.datetime.strptime(data[0], self.datetime_format2)
+                         ).days
+                    ]
         except TypeError as e:
             print(str(e))
             return [0.0]
