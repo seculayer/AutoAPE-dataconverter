@@ -12,26 +12,29 @@ class DateDiff(ConvertAbstract):
         super(DateDiff, self).__init__(**kwargs)
 
         self.num_feat = 1
-        self.datetime_format = "%Y-%m-%dT%H:%M:%S.%fZ"
-        self.datetime_format2 = "%Y-%m-%d"
+        self.datetime_format = "%Y-%m-%d"
+
+    @staticmethod
+    def date_normalize(x):
+        x = x.split('|')
+        x = x[-1].strip()
+        x = x.split('T')[0]
+        x = x.split(' ')[0].strip()
+        return x
 
     def apply(self, data) -> list:
         try:
             if isinstance(data, list):
-                try:
-                    return[
-                        (datetime.datetime.strptime(data[1], self.datetime_format)
-                         - datetime.datetime.strptime(data[0], self.datetime_format)
-                         ).days
-                    ]
-                except ValueError:
-                    return[
-                        (datetime.datetime.strptime(data[1], self.datetime_format2)
-                         - datetime.datetime.strptime(data[0], self.datetime_format2)
-                         ).days
-                    ]
-        except TypeError as e:
-            print(str(e))
+                for idx, ele in enumerate(data):
+                    data[idx] = self.date_normalize(ele)
+
+                return[
+                    (datetime.datetime.strptime(data[1], self.datetime_format)
+                     - datetime.datetime.strptime(data[0], self.datetime_format)
+                     ).days
+                ]
+
+        except (ValueError, TypeError) as e:
             return [0.0]
         return [0.0]
 

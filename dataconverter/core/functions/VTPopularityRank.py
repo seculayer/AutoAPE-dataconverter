@@ -39,7 +39,7 @@ class VTPopularityRank(ConvertAbstract):
 
                 return [int(data_dict.get(self.site_key, {}).get("rank", 9999999))]
         except Exception as e:
-            return [np.nan]
+            return [0.0]
 
         return [0.0]
 
