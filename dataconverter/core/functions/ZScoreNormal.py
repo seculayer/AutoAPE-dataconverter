@@ -4,6 +4,7 @@
 # Powered by Seculayer © 2017 AI-TF Team
 
 from __future__ import annotations
+from typing import List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 
@@ -23,8 +24,11 @@ class ZScoreNormal(ConvertAbstract):
             self.mean = 0
             self.stddev = 0
 
-    def apply(self, data: float) -> list[float]:
+    def apply(self, data: float) -> List[float]:
         try:
+            if isinstance(data, str):
+                return [0.0]
+
             if self.stddev == 0:
                 self.stddev = 1
                 self.LOGGER.warning("Standard Deviation value is zero")
