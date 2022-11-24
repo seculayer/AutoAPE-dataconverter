@@ -16,7 +16,10 @@ class DNSDomainPreProcessing(ConvertAbstract):
         self.cvt_cv = StringConsVowelCounter(arg_list=["all"])
 
     def apply(self, data) -> list:
-        return self.cvt_str_len.apply(data) + self.cvt_cv.apply(data)
+        try:
+            return self.cvt_str_len.apply(data) + self.cvt_cv.apply(data)
+        except Exception as e:
+            return [0.0, 0.0]
 
     def processConvert(self, data):
         pass

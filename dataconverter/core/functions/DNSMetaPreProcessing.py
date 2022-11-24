@@ -17,10 +17,13 @@ class DNSMetaPreProcessing(ConvertAbstract):
         self.cvt_se = StringEntropy()
 
     def apply(self, data) -> list:
-        result = self.cvt_str_len.apply(data)
-        result += self.cvt_nc.apply(data)
-        result += self.cvt_se.apply(data)
-        return result
+        try:
+            result = self.cvt_str_len.apply(data)
+            result += self.cvt_nc.apply(data)
+            result += self.cvt_se.apply(data)
+            return result
+        except Exception as e:
+            return [0.0, 0.0, 0.0]
 
     def processConvert(self, data):
         return self.apply(data)

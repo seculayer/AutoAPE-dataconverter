@@ -11,7 +11,10 @@ class StringLength(ConvertAbstract):
         self.num_feat = 1
 
     def apply(self, data) -> list:
-        return [len(data)]
+        try:
+            return [len(data)]
+        except Exception as e:
+            return [0.0]
 
     def processConvert(self, data):
         return self.apply(data)

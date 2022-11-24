@@ -14,13 +14,15 @@ class StringEntropy(ConvertAbstract):
     def apply(self, data) -> list:
         data_len = len(data)
         word_count = dict()
+        try:
+            for c in data:
+                word_count[c] = word_count.get(c, 0) + 1
 
-        for c in data:
-            word_count[c] = word_count.get(c, 0) + 1
-
-        return [
-            sum([-(c / data_len) * math.log2(c / data_len) for _, c in word_count.items()])
-        ]
+            return [
+                sum([-(c / data_len) * math.log2(c / data_len) for _, c in word_count.items()])
+            ]
+        except Exception as e:
+            return [0.0]
 
     def processConvert(self, data):
         pass

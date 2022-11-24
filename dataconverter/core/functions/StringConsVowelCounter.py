@@ -24,15 +24,18 @@ class StringConsVowelCounter(ConvertAbstract):
     def apply(self, data) -> list:
         count = 0
         length = 0
-        for s in data:
-            count += self.cow_dict.get(s, 0)
-            length += 1
-        if self.option == "cows":
-            return [count]
-        elif self.option == "vowel":
-            return [length - count]
-        else:
-            return [count, length-count]
+        try:
+            for s in data:
+                count += self.cow_dict.get(s, 0)
+                length += 1
+            if self.option == "cows":
+                return [count]
+            elif self.option == "vowel":
+                return [length - count]
+            else:
+                return [count, length-count]
+        except Exception as e:
+            return [count, length]
 
     def processConvert(self, data):
         pass
