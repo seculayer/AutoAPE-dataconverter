@@ -12,17 +12,19 @@ class NumberConsecutive(ConvertAbstract):
     def apply(self, data) -> list:
         counts = []
         count = 1
+        try:
+            start = data[0]
+            for c in data[1:]:
+                if start == c:
+                    count += 1
+                else:
+                    counts.append(count)
+                    start = c
+                    count = 1
 
-        start = data[0]
-        for c in data[1:]:
-            if start == c:
-                count += 1
-            else:
-                counts.append(count)
-                start = c
-                count = 1
-
-        return [max(counts)]
+            return [max(counts)]
+        except Exception as e:
+            return [0]
 
     def processConvert(self, data):
         pass
