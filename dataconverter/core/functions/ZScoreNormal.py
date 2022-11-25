@@ -26,15 +26,10 @@ class ZScoreNormal(ConvertAbstract):
 
     def apply(self, data: float) -> List[float]:
         try:
-            if isinstance(data, str):
-                return [0.0]
-
             if self.stddev == 0:
                 self.stddev = 1
-                self.LOGGER.warning("Standard Deviation value is zero")
             return [(float(data) - float(self.mean)) / float(self.stddev)]
         except Exception as e:
-            self.LOGGER.error(e)
             return [0.0]
 
 
