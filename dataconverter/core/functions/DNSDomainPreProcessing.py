@@ -19,7 +19,7 @@ class DNSDomainPreProcessing(ConvertAbstract):
         try:
             return self.cvt_str_len.apply(data) + self.cvt_cv.apply(data)
         except Exception as e:
-            return [0.0, 0.0]
+            return [0.0, 0.0, 0.0]
 
     def processConvert(self, data):
         pass

@@ -20,8 +20,8 @@ class MinMaxNormal(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         try:
-            self.max = float(self.stat_dict["max"])
-            self.min = float(self.stat_dict["min"])
+            self.max = float(self.stat_dict["basic"]["max"])
+            self.min = float(self.stat_dict["basic"]["min"])
         except Exception as e:
             if not self.error_log_flag:
                 self.LOGGER.error(e, exc_info=True)
