@@ -6,9 +6,10 @@
 from __future__ import annotations
 
 import binascii
-from typing import Union
+from typing import Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class HexToString(ConvertAbstract):
@@ -22,8 +23,10 @@ class HexToString(ConvertAbstract):
             and not self._isBlank(self.arg_list[0])
         ):
             self._charset = self.arg_list[0].strip()
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
 
-    def apply(self, data: Union[str, bytes]) -> list[str]:
+    def apply(self, data: Union[str, bytes]) -> List[str]:
         if self._isBlank(data):
             return [""]
 
@@ -32,15 +35,11 @@ class HexToString(ConvertAbstract):
             self._charset = "UTF-8"
 
         # check string
-        if isinstance(data, str):      
+        if isinstance(data, str):
             data = data.encode(self._charset)
 
-        try:
-            result = binascii.unhexlify(data)
-            return [result.decode(self._charset)]
-        except Exception as e:
-            self.LOGGER.error(e)
-            return [""]
+        result = binascii.unhexlify(data)
+        return [result.decode(self._charset)]
 
 
 if __name__ == "__main__":

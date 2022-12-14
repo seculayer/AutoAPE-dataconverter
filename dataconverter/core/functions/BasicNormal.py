@@ -7,9 +7,10 @@
 from __future__ import annotations
 
 import string
-from typing import Union
+from typing import Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class BasicNormal(ConvertAbstract):
@@ -18,10 +19,12 @@ class BasicNormal(ConvertAbstract):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(
         self, data: Union[int, float, str, bytes, bytearray]
-    ) -> list[Union[str, float]]:
+    ) -> List[Union[str, float]]:
         if not data:
             data = 0
 
@@ -36,14 +39,10 @@ class BasicNormal(ConvertAbstract):
             )
 
         norm = self._max - self._min
-        result: Union[float, str] = ""
-        try:
-            result = (float(data) - self._min) / norm
-        except Exception as e:
-            self.LOGGER.error(e)
+        result: Union[float] = (float(data) - self._min) / norm
 
         # List return
-        return [result]
+        return [float(result)]
 
 
 if __name__ == "__main__":

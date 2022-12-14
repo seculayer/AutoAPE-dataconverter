@@ -3,27 +3,33 @@
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2022 AI Service Model Team, R&D Center.
 import datetime
+import json
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class DateRemaining(ConvertAbstract):
     def __init__(self, **kwargs):
         super(DateRemaining, self).__init__(**kwargs)
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_INT
 
     def apply(self, data) -> list:
-        try:
-            remain_date = data
-            if isinstance(data, list):
-                remain_date = data[0]
-            remain_date = remain_date.split(" ")[0]
-            exp_time = datetime.datetime.strptime(remain_date, "%Y-%m-%d")
+        remain_date = data
+        if isinstance(remain_date, str):
+            try:
+                remain_date = json.loads(remain_date)
+            except:
+                return [0]
+        if isinstance(remain_date, list):
+            if len(remain_date) == 0 or remain_date[0] == '':
+                return [0]
+            remain_date = remain_date[0]
+        remain_date = remain_date.split(" ")[0]
+        exp_time = datetime.datetime.strptime(remain_date, "%Y-%m-%d")
 
-            return [(exp_time - datetime.datetime.now()).days]
-
-        except Exception as e:
-            return [0.0]
+        return [(exp_time - datetime.datetime.now()).days]
 
     def processConvert(self, data):
         return self.apply(data)

@@ -5,9 +5,10 @@
 import math
 import urllib.parse as decode
 import re
-from typing import Tuple, List, Union
+from typing import Tuple, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class SpWCAbstract(ConvertAbstract):
@@ -26,6 +27,8 @@ class SpWCAbstract(ConvertAbstract):
             self.max_len = int(self.arg_list[0])
         except:
             self.max_len = 1
+        self.num_feat = self.max_len
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
         """
         special word type : json

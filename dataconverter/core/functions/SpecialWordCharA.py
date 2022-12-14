@@ -4,7 +4,7 @@
 # Powered by Seculayer © 2017-2018 AI Core Team, Intelligence R&D Center.
 
 from __future__ import annotations
-
+from typing import List
 import json
 import re
 import urllib.parse
@@ -14,9 +14,6 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 
 
 class SpecialWordCharA(ConvertAbstract):
-    preprocessing_type: str
-    dec_op: int
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.max_len = int(self.arg_list[0])
@@ -24,6 +21,7 @@ class SpecialWordCharA(ConvertAbstract):
         self.dec_op = int(self.arg_list[2])
         self.num_feat = self.max_len
         # self.FilterFunc = FilterFunc()
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
         with open(Constants.DIR_RESOURCES + "/special_word_char_dict.json", "r") as f:
             self.special_word_dict = json.load(f)
@@ -37,68 +35,62 @@ class SpecialWordCharA(ConvertAbstract):
             self.LOGGER.warning("No existed Attack Type")
             self.SWtoken = self.SWtoken_Arr["SQL"]
 
-    def apply(self, data: str) -> list[float]:
-        try:
-            # URL Decode
-            data = data.replace("\\/", "/")
-            _input = data
+    def apply(self, data: str) -> List[float]:
+        # URL Decode
+        data = data.replace("\\/", "/")
+        _input = data
 
-            if self.preprocessing_type == "RCE":
-                for rce in self.special_word_dict["SWupper_arr"]:
-                    if rce[0] != " ":
-                        _input = _input.replace(
-                            str(rce[0]), " " + str(rce[0]) + " "
-                        ).replace("  ", " ")
+        if self.preprocessing_type == "RCE":
+            for rce in self.special_word_dict["SWupper_arr"]:
+                if rce[0] != " ":
+                    _input = _input.replace(
+                        str(rce[0]), " " + str(rce[0]) + " "
+                    ).replace("  ", " ")
 
-            _input = _input.replace("#COMMA#", ",").replace("#CRLF#", " ")
+        _input = _input.replace("#COMMA#", ",").replace("#CRLF#", " ")
 
-            if self.dec_op == 1:
-                try:
-                    iLoopCnt = 0
-                    val = ""
-                    while val != _input or iLoopCnt <= 5:
-                        val = _input
-                        iLoopCnt += 1
-                        _input = urllib.parse.unquote(_input.upper())
-                    dec_data = _input.lower()
-                except:
-                    dec_data = str(_input).lower()
-                # print(dec_data)
-            else:
-                dec_data = _input
+        if self.dec_op == 1:
+            try:
+                iLoopCnt = 0
+                val = ""
+                while val != _input or iLoopCnt <= 5:
+                    val = _input
+                    iLoopCnt += 1
+                    _input = urllib.parse.unquote(_input.upper())
+                dec_data = _input.lower()
+            except:
+                dec_data = str(_input).lower()
+            # print(dec_data)
+        else:
+            dec_data = _input
 
-            rep_data = re.sub(r"\s+", " ", dec_data)
-            rep_data = re.sub(r"[\W_]", r" \g<0> ", rep_data)
-            # rep_data = re.sub(r'% [\d\w]{2}', " \g<0> ", rep_data)
-            rep_data = re.sub(r" +", " ", rep_data)
+        rep_data = re.sub(r"\s+", " ", dec_data)
+        rep_data = re.sub(r"[\W_]", r" \g<0> ", rep_data)
+        # rep_data = re.sub(r'% [\d\w]{2}', " \g<0> ", rep_data)
+        rep_data = re.sub(r" +", " ", rep_data)
 
-            # rep_data = re.sub(r'% ', "%", rep_data)
-            rep_data = re.sub(r"[^0-9a-zA-Z\W_]", "", rep_data)
+        # rep_data = re.sub(r'% ', "%", rep_data)
+        rep_data = re.sub(r"[^0-9a-zA-Z\W_]", "", rep_data)
 
-            rep_data_list = rep_data.split(" ")
-            # print(rep_data_list)
-            result_list = []
+        rep_data_list = rep_data.split(" ")
+        # print(rep_data_list)
+        result_list = []
 
-            # val_list = self.SWtoken.values()
-            # max_val = max(val_list)
+        # val_list = self.SWtoken.values()
+        # max_val = max(val_list)
 
-            for token in rep_data_list:
-                try:
-                    result_list.append(float(self.SWtoken[token]))
-                except:
-                    pass
-            result_len = len(result_list)
-            if result_len < self.max_len:
-                padding = [0.0] * (self.max_len - result_len)
-                result_list.extend(padding)
-                return result_list
-            else:
-                return result_list[: self.max_len]
-
-        except Exception as e:
-            # print(e)
-            # self.LOGGER.error(e, exc_info=True)
-            return [0.0] * self.max_len
+        for token in rep_data_list:
+            try:
+                result_list.append(float(self.SWtoken[token]))
+            except:
+                pass
+        result_len = len(result_list)
+        if result_len < self.max_len:
+            padding = [0.0] * (self.max_len - result_len)
+            result_list.extend(padding)
+            return result_list
+        else:
+            return result_list[: self.max_len]
 
     def get_num_feat(self) -> int:
         return self.num_feat

@@ -4,10 +4,10 @@
 # Powered by Seculayer © 2017-2018 AI Core Team, Intelligence R&D Center.
 
 from __future__ import annotations
-
-from typing import Sequence
+from typing import Sequence, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class String2ASCII(ConvertAbstract):
@@ -18,8 +18,9 @@ class String2ASCII(ConvertAbstract):
         self.max_len = int(self.arg_list[0])
         self.seq_len = int(self.arg_list[1])
         self.num_feat = self.max_len
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
-    def apply(self, data: Sequence[str]) -> list[Sequence[float]]:
+    def apply(self, data: Sequence[str]) -> List[Sequence[float]]:
         try:
             feature = []
             for idx, word in enumerate(data):
@@ -34,8 +35,6 @@ class String2ASCII(ConvertAbstract):
             return feature
 
         except Exception as e:
-            # print(e)
-            self.LOGGER.error(e, exc_info=True)
             return [[0.0] * self.max_len] * self.seq_len
 
     @staticmethod

@@ -17,7 +17,8 @@ class DGAChar2IDX(ConvertAbstract):
         super().__init__(**kwargs)
         self.max_len = 28
         self.num_feat = self.max_len
-        self.padding_val = 0
+        self.return_type = Constants.RETURN_TYPE_FLOAT
+        self.padding_val: float = 0.
 
         char_map_path = "{}/{}".format(Constants.DIR_RESOURCES, "CHAR2IDX_DGA.json")
         f = open(char_map_path, "r")
@@ -52,7 +53,7 @@ class DGAChar2IDX(ConvertAbstract):
         if curr_len > self.max_len:
             return data[0:self.max_len]
         elif curr_len < self.max_len:
-            data += [float(self.padding_val)] * (self.max_len - curr_len)
+            data += [self.padding_val] * (self.max_len - curr_len)
             return data
         else:
             return data

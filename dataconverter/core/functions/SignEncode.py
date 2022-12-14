@@ -4,10 +4,10 @@
 # Powered by Seculayer © 2021 Service Model Team
 
 from __future__ import annotations
-
-from typing import Any, Optional
+from typing import Any, Optional, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class SignEncode(ConvertAbstract):
@@ -16,11 +16,12 @@ class SignEncode(ConvertAbstract):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_INT
 
-    def apply(self, data: Any) -> list[Optional[int]]:
+    def apply(self, data: Any) -> List[Optional[int]]:
         if data not in (self._min, self._max):
-            self.LOGGER.error("invalid input value")
-            return [None]
+            return [0]
 
         if data == 0:
             return [-1]

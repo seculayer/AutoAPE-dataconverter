@@ -5,6 +5,7 @@
 import json
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class VTMalicious(ConvertAbstract):
@@ -12,17 +13,18 @@ class VTMalicious(ConvertAbstract):
         super(VTMalicious, self).__init__(**kwargs)
 
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data) -> list:
-        try:
-            if isinstance(data, list):
-                try:
-                    return [float(json.loads(data[0]).get("malicious"))]
-                except json.decoder.JSONDecodeError:
-                    rpl_data = data[0].replace('\'', '"')
-                    return [float(json.loads(rpl_data).get("malicious"))]
-        except Exception as e:
-            return [0.0]
+        if isinstance(data, list):
+            if len(data) == 0 or data[0] == '':
+                return [0.0]
+            try:
+                return [float(json.loads(data[0]).get("malicious"))]
+            except json.decoder.JSONDecodeError:
+                rpl_data = data[0].replace('\'', '"')
+                return [float(json.loads(rpl_data).get("malicious"))]
+
         return [0.0]
 
     def reverse(self, data, original_data):

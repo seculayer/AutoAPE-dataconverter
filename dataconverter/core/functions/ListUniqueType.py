@@ -5,6 +5,7 @@
 import numpy as np
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class ListUniqueType(ConvertAbstract):
@@ -12,15 +13,14 @@ class ListUniqueType(ConvertAbstract):
         super(ListUniqueType, self).__init__(**kwargs)
 
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data) -> list:
-        try:
-            if isinstance(data, str):
-                data = data.split(" ")
-            if isinstance(data, list):
-                return [len(np.unique(data))]
-        except Exception as e:
-            return [0.0]
+        if isinstance(data, str):
+            data = data.split(" ")
+        if isinstance(data, list):
+            return [len(np.unique(data))]
+
         return [0.0]
 
     def processConvert(self, data):

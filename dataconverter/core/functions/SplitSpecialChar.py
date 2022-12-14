@@ -4,44 +4,39 @@
 # Powered by Seculayer © 2017 AI-TF Team
 
 from __future__ import annotations
-
+from typing import List
 import re
 import urllib.parse as decode
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class SplitSpecialChar(ConvertAbstract):
-    reg: re.Pattern
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.max_len = int(self.arg_list[0])
         self.reg = re.compile(r"[~!#$%^&*|;,?/\n\r\s]")
         self.num_feat = self.max_len
+        self.return_type = Constants.RETURN_TYPE_STRING
 
     # 토크나이징 하는곳
-    def apply(self, data: str) -> list[str]:
+    def apply(self, data: str) -> List[str]:
+        for _ in range(2):
+            data = decode.unquote(data)
+        row = self.reg.split(data.lower())
+        row = list(filter(bool, row))
 
-        try:
-            for _ in range(2):
-                data = decode.unquote(data)
-            row = self.reg.split(data.lower())
-            row = list(filter(bool, row))
+        result_len = len(row)
+        # padding
+        if result_len < self.max_len:
+            padding = ["#PADDING#"] * (self.max_len - result_len)
+            # padding = ['#PADDING#' for _ in range(self.max_len - result_len)]
+            row.extend(padding)
+        else:
+            row = row[: self.max_len]
 
-            result_len = len(row)
-            # padding
-            if result_len < self.max_len:
-                padding = ["#PADDING#"] * (self.max_len - result_len)
-                # padding = ['#PADDING#' for _ in range(self.max_len - result_len)]
-                row.extend(padding)
-            else:
-                row = row[: self.max_len]
-
-            return row
-        except Exception as e:
-            self.LOGGER.error(e)
-            return ["#PADDING#"] * self.max_len
+        return row
 
     def get_num_feat(self) -> int:
         return self.max_len

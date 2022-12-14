@@ -3,6 +3,7 @@
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2022 AI Service Model Team, R&D Center.
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class ListLength(ConvertAbstract):
@@ -10,15 +11,13 @@ class ListLength(ConvertAbstract):
         super(ListLength, self).__init__(**kwargs)
 
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data) -> list:
-        try:
-            if isinstance(data, str):
-                data = data.split(" ")
-            if isinstance(data, list):
-                return [len(data)]
-        except Exception as e:
-            return [0.0]
+        if isinstance(data, str):
+            data = data.split(" ")
+        if isinstance(data, list):
+            return [len(data)]
 
         return [0.0]
 

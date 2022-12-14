@@ -4,10 +4,10 @@
 # Powered by Seculayer © 2021 Service Model Team
 
 from __future__ import annotations
-
-from typing import Optional, SupportsFloat, Union
+from typing import Optional, SupportsFloat, Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class PortNormal(ConvertAbstract):
@@ -17,16 +17,15 @@ class PortNormal(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def apply(self, data: Union[SupportsFloat, str, float]) -> list[Optional[float]]:
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
+
+    def apply(self, data: Union[SupportsFloat, str, float]) -> List[Optional[float]]:
         norm = self._max - self._min
-        result = None
-        try:
-            # Normalization
-            result = (float(data) - self._min) / norm
-            # temp_result = float(data) / 65535
-        except Exception as e:
-            # print log for error
-            self.LOGGER.error(str(e))
+
+        # Normalization
+        result = (float(data) - self._min) / norm
+        # temp_result = float(data) / 65535
 
         # List return
         return [result]

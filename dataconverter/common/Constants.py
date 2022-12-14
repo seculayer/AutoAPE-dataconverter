@@ -32,6 +32,10 @@ class Constants(object, metaclass=Singleton):
             + "/../resources"
     )
 
+    RETURN_TYPE_STRING = "str"
+    RETURN_TYPE_INT = "int"
+    RETURN_TYPE_FLOAT = "float"
+
 
 if __name__ == "__main__":
     print(Constants.__dict__)

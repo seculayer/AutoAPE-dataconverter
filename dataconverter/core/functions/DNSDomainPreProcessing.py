@@ -5,21 +5,20 @@
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.core.functions.StringConsVowelCounter import StringConsVowelCounter
 from dataconverter.core.functions.StringLength import StringLength
+from dataconverter.common.Constants import Constants
 
 
 class DNSDomainPreProcessing(ConvertAbstract):
     def __init__(self, **kwargs):
         super(DNSDomainPreProcessing, self).__init__(**kwargs)
         self.num_feat = 3
+        self.return_type = Constants.RETURN_TYPE_INT
 
         self.cvt_str_len = StringLength()
         self.cvt_cv = StringConsVowelCounter(arg_list=["all"])
 
     def apply(self, data) -> list:
-        try:
-            return self.cvt_str_len.apply(data) + self.cvt_cv.apply(data)
-        except Exception as e:
-            return [0.0, 0.0, 0.0]
+        return self.cvt_str_len.apply(data) + self.cvt_cv.apply(data)
 
     def processConvert(self, data):
         pass

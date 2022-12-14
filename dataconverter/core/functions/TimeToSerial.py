@@ -6,6 +6,7 @@
 from datetime import datetime
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class TimeToSerial(ConvertAbstract):
@@ -18,47 +19,42 @@ class TimeToSerial(ConvertAbstract):
         self.num_feat = 1
         self.max_len = 1
         # ["월", "화", "수", "목", "금", "토", "일"]
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data):
-        try:
-            if len(data) == 14:
-                str2datetime = datetime.strptime(data, "%Y%m%d%H%M%S")
+        if len(data) == 14:
+            str2datetime = datetime.strptime(data, "%Y%m%d%H%M%S")
 
-            elif len(data) == 15 or len(data) == 16:  # "2019-06-26 0:10"
-                str2datetime = datetime.strptime(data, "%Y-%m-%d %H:%M")
-            else:
-                try:
-                    str2datetime = data.split('.')[0]
-                except:
-                    str2datetime = data[:19]
-                str2datetime = datetime.strptime(str2datetime, "%Y-%m-%d %H:%M:%S")
+        elif len(data) == 15 or len(data) == 16:  # "2019-06-26 0:10"
+            str2datetime = datetime.strptime(data, "%Y-%m-%d %H:%M")
+        else:
+            try:
+                str2datetime = data.split('.')[0]
+            except:
+                str2datetime = data[:19]
+            str2datetime = datetime.strptime(str2datetime, "%Y-%m-%d %H:%M:%S")
 
-            month = str2datetime.month
-            days = str2datetime.day
-            hour = str2datetime.hour
-            minute = str2datetime.minute
+        month = str2datetime.month
+        days = str2datetime.day
+        hour = str2datetime.hour
+        minute = str2datetime.minute
 
-            result = 0.
-            if self.input_type == 0:  # created during one day
-                result = int((hour * 60 + minute) / self.interval) + 1
-            elif self.input_type == 1:  # created during one week
-                week_day = str2datetime.weekday()
-                result = int(week_day * (1440 / self.interval)) + int((hour * 60 + minute) / self.interval) + 1
+        result = 0.
+        if self.input_type == 0:  # created during one day
+            result = int((hour * 60 + minute) / self.interval) + 1
+        elif self.input_type == 1:  # created during one week
+            week_day = str2datetime.weekday()
+            result = int(week_day * (1440 / self.interval)) + int((hour * 60 + minute) / self.interval) + 1
 
-            else:                 # created during one month
-                # TODO
-                pass
+        else:                 # created during one month
+            # TODO
+            pass
 
-            result_list = list()
-            # self.LOGGER.error("----------result : {}".format(result))
-            result_list.append(float(result))
+        result_list = list()
+        # self.LOGGER.error("----------result : {}".format(result))
+        result_list.append(float(result))
 
-            return result_list
-
-        except Exception as e:
-            # print(e)
-            # self.LOGGER.error(e, exc_info=True)
-            return [0.]
+        return result_list
 
     def get_num_feat(self):
         return self.max_len

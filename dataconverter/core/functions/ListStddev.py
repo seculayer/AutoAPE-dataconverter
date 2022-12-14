@@ -5,6 +5,7 @@
 import numpy as np
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class ListStddev(ConvertAbstract):
@@ -12,18 +13,24 @@ class ListStddev(ConvertAbstract):
         super(ListStddev, self).__init__(**kwargs)
 
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data) -> list:
-        try:
-            if isinstance(data, str):
-                data = data.split(" ")
-            if isinstance(data, list):
-                for idx, v in enumerate(data):
+        if isinstance(data, str):
+            data = data.split(" ")
+        if isinstance(data, list):
+            for idx, v in enumerate(data):
+                try:
                     data[idx] = float(v)
+                except:
+                    return [0.0]
+            if len(data) > 0:
                 stddev = np.std(data)
-                return [stddev]
-        except Exception as e:
-            return [0.0]
+            else:
+                stddev = 0.
+
+            return [float(stddev)]
+
         return [0.0]
 
     def processConvert(self, data):

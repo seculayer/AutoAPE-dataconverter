@@ -7,12 +7,10 @@ from __future__ import annotations
 from typing import List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class ZScoreNormal(ConvertAbstract):
-    # mean: float
-    # stddev: float
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         try:
@@ -24,13 +22,13 @@ class ZScoreNormal(ConvertAbstract):
             self.mean = 0
             self.stddev = 0
 
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
+
     def apply(self, data: float) -> List[float]:
-        try:
-            if self.stddev == 0:
-                self.stddev = 1
-            return [(float(data) - float(self.mean)) / float(self.stddev)]
-        except Exception as e:
-            return [0.0]
+        if self.stddev == 0:
+            self.stddev = 1
+        return [(float(data) - float(self.mean)) / float(self.stddev)]
 
 
 if __name__ == "__main__":

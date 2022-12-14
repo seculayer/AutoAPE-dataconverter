@@ -5,8 +5,10 @@
 ######################################################################################
 
 from __future__ import annotations
+from typing import List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class ToUpperCase(ConvertAbstract):
@@ -17,8 +19,10 @@ class ToUpperCase(ConvertAbstract):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
 
-    def apply(self, data: str) -> list[str]:
+    def apply(self, data: str) -> List[str]:
         if self._isBlank(data):
             return [""]
 

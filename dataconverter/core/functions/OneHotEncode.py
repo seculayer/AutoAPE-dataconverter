@@ -4,16 +4,13 @@
 # Powered by Seculayer © 2021 Service Model Team, Intelligence R&D Center.
 
 from __future__ import annotations
-
-from typing import Any
+from typing import Any, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class OneHotEncode(ConvertAbstract):
-    unique_dict: dict[Any, int]
-    unique_count: int
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.unique_dict = {}
@@ -23,9 +20,12 @@ class OneHotEncode(ConvertAbstract):
             self.unique_dict[key] = idx
             self.unique_count += 1
 
-    def apply(self, data: Any) -> list[int]:
+        self.num_feat = self.unique_count
+        self.return_type = Constants.RETURN_TYPE_INT
+
+    def apply(self, data: Any) -> List[int]:
         # ZERO
-        result: list[int] = [0] * self.unique_count
+        result: List[int] = [0] * self.unique_count
 
         # GET INDEX
         index = self.unique_dict.get(data)

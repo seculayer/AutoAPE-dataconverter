@@ -3,18 +3,17 @@
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2022 AI Service Model Team, R&D Center.
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class StringLength(ConvertAbstract):
     def __init__(self, **kwargs):
         super(StringLength, self).__init__(**kwargs)
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_INT
 
     def apply(self, data) -> list:
-        try:
-            return [len(data)]
-        except Exception as e:
-            return [0.0]
+        return [len(data)]
 
     def processConvert(self, data):
         return self.apply(data)

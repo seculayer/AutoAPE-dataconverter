@@ -4,71 +4,65 @@
 # Powered by Seculayer © 2021 Service Model Team
 
 from __future__ import annotations
-
-from typing import Union
+from typing import Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class MergeURLResCode(ConvertAbstract):
-    _input_type: str
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
         self._input_type = self.arg_list[0]
 
-    def apply(self, data: list[str]) -> list[str]:
+    def apply(self, data: List[str]) -> List[str]:
+        # data = data.split(self.split_separator)
+        # self.LOGGER.error("data?????? {}".format(data))
+        data1: Union[None, int, str] = None
+        data2: Union[None, int, str] = None
+        data1_flag = "str"
+        data2_flag = "str"
+
         try:
-            # data = data.split(self.split_separator)
-            # self.LOGGER.error("data?????? {}".format(data))
-            data1: Union[None, int, str] = None
-            data2: Union[None, int, str] = None
-            data1_flag = "str"
-            data2_flag = "str"
+            data1 = int(data[0])
+            data1_flag = "int"
+        except:
+            data1 = data[0]
 
-            try:
-                data1 = int(data[0])
-                data1_flag = "int"
-            except:
-                data1 = data[0]
+        try:
+            data2 = int(data[1])
+            data2_flag = "int"
+        except:
+            data2 = data[1]
 
-            try:
-                data2 = int(data[1])
-                data2_flag = "int"
-            except:
-                data2 = data[1]
+        res_code = None
+        url = None
 
-            res_code = None
-            url = None
+        if data2_flag == "int":
+            url = str(data1)
+            res_code = data2
 
-            if data2_flag == "int":
-                url = str(data1)
-                res_code = data2
+        else:
+            res_code = data1
+            url = str(data2)
 
-            else:
-                res_code = data1
-                url = str(data2)
+        if self._input_type == 0:
+            url_split_list = url.split(" ")
+            url = url_split_list[1]
+        else:
+            pass
 
-            if self._input_type == 0:
-                url_split_list = url.split(" ")
-                url = url_split_list[1]
-            else:
-                pass
+        url = url.strip()
+        url = url.split("?")[0]
+        # url = url.replace(":", "_")
 
-            url = url.strip()
-            url = url.split("?")[0]
-            # url = url.replace(":", "_")
+        # cutting_index = url.find("/")
+        # url = url[cutting_index + 1:]
 
-            # cutting_index = url.find("/")
-            # url = url[cutting_index + 1:]
-
-            result_str = str(res_code) + "|" + str(url)
-            return [result_str]
-
-        except Exception as e:
-            self.LOGGER.error(e, exc_info=True)
-            return ["#PADDING#|#PADDING#"] * self.num_feat
+        result_str = str(res_code) + "|" + str(url)
+        return [result_str]
 
 
 if __name__ == "__main__":

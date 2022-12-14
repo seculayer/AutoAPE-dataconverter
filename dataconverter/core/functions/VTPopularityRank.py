@@ -3,18 +3,18 @@
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2022 AI Service Model Team, R&D Center.
 import json
-from logging import Logger
 
-import numpy as np
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 # DNS VT Meta
 class VTPopularityRank(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_INT
         self.site_key = self._site_key_map(self.arg_list[0])
 
     @staticmethod
@@ -29,19 +29,18 @@ class VTPopularityRank(ConvertAbstract):
         return site_dict.get(site_key, None)
 
     def apply(self, data) -> list:
-        try:
-            if isinstance(data, list):
-                try:
-                    data_dict = json.loads(data[0])
-                except json.decoder.JSONDecodeError:
-                    rpl_data = data[0].replace('\'', '"')
-                    data_dict = json.loads(rpl_data)
+        if isinstance(data, list):
+            if len(data) == 0 or data[0] == '':
+                return [0]
+            try:
+                data_dict = json.loads(data[0])
+            except json.decoder.JSONDecodeError:
+                rpl_data = data[0].replace('\'', '"')
+                data_dict = json.loads(rpl_data)
 
-                return [int(data_dict.get(self.site_key, {}).get("rank", 9999999))]
-        except Exception as e:
-            return [0.0]
+            return [int(data_dict.get(self.site_key, {}).get("rank", 9999999))]
 
-        return [0.0]
+        return [0]
 
     def processConvert(self, data):
         return self.apply(data)

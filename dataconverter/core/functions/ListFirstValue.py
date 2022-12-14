@@ -3,6 +3,7 @@
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2022 AI Service Model Team, R&D Center.
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class ListFirstValue(ConvertAbstract):
@@ -10,15 +11,15 @@ class ListFirstValue(ConvertAbstract):
         super(ListFirstValue, self).__init__(**kwargs)
 
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data) -> list:
-        try:
-            if isinstance(data, str):
-                data = data.split(" ")
-            if isinstance(data, list):
-                return [float(data[0])]
-        except Exception as e:
-            return [0.0]
+        if isinstance(data, str):
+            data = data.split(" ")
+        if isinstance(data, list):
+            if len(data) == 0 or data[0] == '':
+                return [0.0]
+            return [float(data[0])]
         return [0.0]
 
     def reverse(self, data, original_data):

@@ -4,8 +4,9 @@
 # Powered by Seculayer © 2021 Service Model Team
 
 from __future__ import annotations
-
+from typing import List
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class IPTransferDivide(ConvertAbstract):
@@ -16,14 +17,11 @@ class IPTransferDivide(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 4
+        self.return_type = Constants.RETURN_TYPE_STRING
 
     # 토크나이징 하는곳
-    def apply(self, data: str) -> list[str]:
-        try:
-            row = data.split(".")[:4]
-        except Exception as e:
-            # self.LOGGER.error(e)
-            row = ["0", "0", "0", "0"]
+    def apply(self, data: str) -> List[str]:
+        row = data.split(".")[:4]
 
         return row
 

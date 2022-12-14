@@ -3,28 +3,28 @@
 # e-mail : jin.kim@seculayer.com
 # Powered by Seculayer © 2022 AI Service Model Team, R&D Center.
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class NumberConsecutive(ConvertAbstract):
     def __init__(self, **kwargs):
         super(NumberConsecutive, self).__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_INT
 
     def apply(self, data) -> list:
         counts = []
         count = 1
-        try:
-            start = data[0]
-            for c in data[1:]:
-                if start == c:
-                    count += 1
-                else:
-                    counts.append(count)
-                    start = c
-                    count = 1
+        start = data[0]
+        for c in data[1:]:
+            if start == c:
+                count += 1
+            else:
+                counts.append(count)
+                start = c
+                count = 1
 
-            return [max(counts)]
-        except Exception as e:
-            return [0.0]
+        return [max(counts)]
 
     def processConvert(self, data):
         pass

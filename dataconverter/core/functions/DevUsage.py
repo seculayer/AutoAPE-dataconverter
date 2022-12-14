@@ -5,9 +5,10 @@
 
 from __future__ import annotations
 
-from typing import SupportsFloat, Union
+from typing import SupportsFloat, Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class DevUsage(ConvertAbstract):
@@ -18,13 +19,10 @@ class DevUsage(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
-    def apply(self, data: Union[str, float, SupportsFloat]) -> list[float]:
-        try:
-            return [(float(data) / 100.0 - 0.5) * 2]
-        except Exception as e:
-            self.LOGGER.error(e)
-            return [0.0]
+    def apply(self, data: Union[str, float, SupportsFloat]) -> List[float]:
+        return [(float(data) / 100.0 - 0.5) * 2]
 
 
 if __name__ == "__main__":

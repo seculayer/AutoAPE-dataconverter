@@ -5,24 +5,24 @@
 import math
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class StringEntropy(ConvertAbstract):
     def __init__(self, **kwargs):
         super(StringEntropy, self).__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     def apply(self, data) -> list:
         data_len = len(data)
         word_count = dict()
-        try:
-            for c in data:
-                word_count[c] = word_count.get(c, 0) + 1
+        for c in data:
+            word_count[c] = word_count.get(c, 0) + 1
 
-            return [
-                sum([-(c / data_len) * math.log2(c / data_len) for _, c in word_count.items()])
-            ]
-        except Exception as e:
-            return [0.0]
+        return [
+            sum([-(c / data_len) * math.log2(c / data_len) for _, c in word_count.items()])
+        ]
 
     def processConvert(self, data):
         pass

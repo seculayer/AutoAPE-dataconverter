@@ -6,9 +6,10 @@
 from __future__ import annotations
 
 import math
-from typing import SupportsFloat, Union
+from typing import SupportsFloat, Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class DecimalScaleNormal(ConvertAbstract):
@@ -16,14 +17,12 @@ class DecimalScaleNormal(ConvertAbstract):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
-    def apply(self, data: Union[str, float, SupportsFloat]) -> list[float]:
+    def apply(self, data: Union[str, float, SupportsFloat]) -> List[float]:
         length = (math.log10(self._max) + 1) // 1
-        try:
-            return [float(data) / math.pow(10, length)]
-        except Exception as e:
-            self.LOGGER.error(str(e))
-            return [0.0]
+        return [float(data) / math.pow(10, length)]
 
 
 if __name__ == "__main__":

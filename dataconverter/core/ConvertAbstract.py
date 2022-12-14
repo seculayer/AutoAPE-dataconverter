@@ -9,17 +9,10 @@ import logging
 from logging import Logger
 from typing import Union
 
+from dataconverter.common.Constants import Constants
+
 
 class ConvertAbstract(object):
-    num_feat: int
-    LOGGER: Logger
-    stat_dict: dict
-    arg_list: list
-    split_separator: str
-    max_len: int
-    padding_val: int
-    error_log_flag: bool
-
     def __init__(
         self,
         arg_list: list = [],
@@ -27,6 +20,7 @@ class ConvertAbstract(object):
         logger: Logger = logging.getLogger(),
     ):
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_INT
         self.LOGGER = logger
         self.stat_dict = stat_dict
         self.arg_list = arg_list
@@ -34,7 +28,6 @@ class ConvertAbstract(object):
         self.split_separator = ","
         self.max_len = 50
         self.padding_val = 255
-        self.error_log_flag = False
 
     def processConvert(self, data):
         return self.apply(data)
@@ -50,10 +43,10 @@ class ConvertAbstract(object):
             if 1 == self.num_feat:
                 self.num_feat = self.max_len
 
-            res_val_lenth = len(arr_ret)
+            res_val_length = len(arr_ret)
 
-            if res_val_lenth < self.max_len:
-                padding = [self.padding_val] * (self.max_len - res_val_lenth)
+            if res_val_length < self.max_len:
+                padding = [self.padding_val] * (self.max_len - res_val_length)
                 arr_ret.extend(padding)
                 return arr_ret
 
@@ -64,8 +57,11 @@ class ConvertAbstract(object):
 
         return arr_ret
 
-    def get_num_feat(self):
+    def get_num_feat(self) -> int:
         return self.num_feat
+
+    def get_return_type(self) -> str:
+        return self.return_type
 
     def reverse(self, data, original_data):
         raise NotImplementedError

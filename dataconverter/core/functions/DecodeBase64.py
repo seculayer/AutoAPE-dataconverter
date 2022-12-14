@@ -6,16 +6,19 @@
 from __future__ import annotations
 
 import base64
-from typing import Union
+from typing import Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class DecodeBase64(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
 
-    def apply(self, data: Union[str, bytes, bytearray]) -> list[str]:
+    def apply(self, data: Union[str, bytes, bytearray]) -> List[str]:
         charset = 'utf-8'
 
         if not isinstance(data, (str, bytes, bytearray)):
@@ -27,12 +30,8 @@ class DecodeBase64(ConvertAbstract):
         if isinstance(data, str):
             data = data.encode(charset)
 
-        try:
-            result = base64.b64decode(data)
-            return [result.decode(charset)]
-        except Exception as e:
-            self.LOGGER.error(e)
-            return [""]
+        result = base64.b64decode(data)
+        return [result.decode(charset)]
 
 
 if __name__ == "__main__":

@@ -4,21 +4,22 @@
 # Powered by Seculayer © 2018 AI-Core Team
 
 from __future__ import annotations
+from typing import List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class Substr(ConvertAbstract):
-    _start_index: int = 0
-    _end_index: int = 0
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if len(self.arg_list) >= 2:
             self._start_index = int(self.arg_list[0])
             self._end_index = int(self.arg_list[1])
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
 
-    def apply(self, data: str) -> list[str]:
+    def apply(self, data: str) -> List[str]:
         result = ""
 
         # check blank

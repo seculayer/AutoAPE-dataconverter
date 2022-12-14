@@ -4,11 +4,12 @@
 # Powered by Seculayer © 2017-2018 AI Core Team, Intelligence R&D Center.
 
 from __future__ import annotations
-
+from typing import List
 import re
 import urllib.parse as decode
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class SpecialCharExtract(ConvertAbstract):
@@ -17,8 +18,9 @@ class SpecialCharExtract(ConvertAbstract):
         self.max_len = int(self.arg_list[0])
         self.num_feat = self.max_len
         self.padding_val = 0.
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
-    def apply(self, data: str) -> list[float]:
+    def apply(self, data: str) -> List[float]:
         # URL Decode
         try:
             data = data.replace("\\/", "/")
