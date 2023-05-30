@@ -6,6 +6,7 @@ import math
 import urllib.parse as decode
 import re
 from typing import Tuple, List
+import numpy as np
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
@@ -20,7 +21,6 @@ class SpWCAbstract(ConvertAbstract):
 
         arg_list[0] = max length
 
-        must
         """
         super().__init__(**kwargs)
         try:
@@ -54,6 +54,17 @@ class SpWCAbstract(ConvertAbstract):
     def _load_special_word_dict() -> Tuple[dict, dict, dict]:
         raise NotImplementedError
 
+    # for xai
+    def fit(self, data):
+        return
+
+    # for xai
+    def transform(self, data: List):
+        rst: List = list()
+        for line_str in data:
+            rst.append(self.apply(line_str))
+        return np.array(rst)
+
     def apply(self, data) -> list:
         data = self._replace_basic(data)
         data = self._url_decode(data)
@@ -72,7 +83,8 @@ class SpWCAbstract(ConvertAbstract):
 
         for i, feature in enumerate(data):
             if feature == self.padding_val:
-                rst_list.append(f"{i}_PADDING")
+                # rst_list.append(f"{i}_PADDING")
+                continue
             else:
                 origin_word_list = self.reverse_dict[str(int(feature))]
                 min_sidx = math.inf
