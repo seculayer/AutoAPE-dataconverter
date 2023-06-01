@@ -388,7 +388,6 @@ paramiko = "^2.10.3"
 psutil = "^5.9.0"
 pycryptodome = "^3.14.1"
 requests = "^2.27.1"
-scp = "^0.14.4"
 ujson = "^5.2.0"
 
 [package.source]
@@ -524,14 +523,6 @@ urllib3 = ">=1.21.1,<1.27"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
-
-[[package]]
-name = "scp"
-version = "0.14.4"
-description = "scp module for paramiko"
-category = "main"
-optional = false
-python-versions = "*"
 
 [package.dependencies]
 paramiko = "*"
@@ -1033,10 +1024,6 @@ pytest-xdist = [
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
-]
-scp = [
-    {file = "scp-0.14.4-py2.py3-none-any.whl", hash = "sha256:29ddaafbfba60793a8a779694c97d8c150d365668a4ef67616c515b80a69ef2f"},
-    {file = "scp-0.14.4.tar.gz", hash = "sha256:54699b92cb68ae34b5928c48a888eab9722a212502cba89aa795bd56597505bd"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
