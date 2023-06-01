@@ -33,7 +33,7 @@ class MinMaxNormal(ConvertAbstract):
 
         # temp_result = float(data) / 255
         # temp_result = (float(data) - self.min) / (self.max - self.min)
-        result = (data - self.min) / norm
+        result = (float(data) - self.min) / norm
         return [result]
 
     def reverse(self, data: float) -> Optional[float]:

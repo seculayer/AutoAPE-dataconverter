@@ -29,7 +29,13 @@ class NotNormal(ConvertAbstract):
             except Exception as e:
                 pass
 
-            data = float(data)
+            if isinstance(data, list):
+                pass
+            else:
+                try:
+                    data = float(data)
+                except (ValueError, TypeError):
+                    pass
 
             return [data]
 
