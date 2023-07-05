@@ -16,7 +16,7 @@ class OneHotEncode(ConvertAbstract):
         self.unique_dict = {}
         self.unique_count = 0
 
-        for idx, key in enumerate(sorted(self.stat_dict.get("unique", {}).keys())):
+        for idx, key in enumerate(sorted(self.stat_dict.get("unique", {}).get("unique", {}).keys())):
             self.unique_dict[key] = idx
             self.unique_count += 1
 
