@@ -29,10 +29,14 @@ class ImageCLAHE(ConvertAbstract):
 
 
 if __name__ == "__main__":
+    from pycmmn.utils.ImageUtils import ImageUtils
     image_path = "/home/autoAPE"
     __cv2 = CV2Utils.get_cv2()
-    _img = __cv2.imread(f"{image_path}/iris.jpg", __cv2.IMREAD_GRAYSCALE)
-    rst = ImageCLAHE(stat_dict=None, arg_list=["A"]).apply(_img)
+    with open(f"{image_path}/iris.jpg", "rb") as img_f:
+        img_arr = img_f.read()
+        img_data = ImageUtils.load(img_arr)
+        # _img = __cv2.imread(f"{image_path}/iris.jpg", __cv2.IMREAD_GRAYSCALE)
+        rst = ImageCLAHE(stat_dict=None, arg_list=["A"]).apply(img_data)
 
-    print(rst)
-    __cv2.imwrite(f"{image_path}/rst.jpg", rst)
+    print(rst[0])
+    __cv2.imwrite(f"{image_path}/rst.jpg", rst[0])
