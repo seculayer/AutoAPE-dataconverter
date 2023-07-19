@@ -12,7 +12,7 @@ class ImageCannyEdgeDetectuin(ConvertAbstract):
     def apply(self, data:Any) -> list:
         _cv2 = CV2Utils.get_cv2()
         img = _cv2.cvtColor(data, _cv2.COLOR_BGR2RGB)
-        canny_edge = _cv2.Canny(img, 60, 200)
+        canny_edge = _cv2.Canny(img, 100, 200)
 
         return [canny_edge]
 
