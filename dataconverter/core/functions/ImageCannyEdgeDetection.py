@@ -3,7 +3,7 @@ from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
 
-class ImageCannyEdgeDetectuin(ConvertAbstract):
+class ImageCannyEdgeDetection(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
