@@ -7,7 +7,7 @@ class ImageGrayScale(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
-        self.return_type = Constants.RETURN_TYPE_FLOAT
+        self.return_type = Constants.RETURN_TYPE_INT
 
     def apply(self, data: Any) -> list:
         _cv2 = CV2Utils.get_cv2()
