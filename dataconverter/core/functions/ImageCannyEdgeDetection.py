@@ -7,7 +7,7 @@ class ImageCannyEdgeDetection(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
-        self.return_type = Constants.RETURN_TYPE_FLOAT
+        self.return_type = Constants.RETURN_TYPE_INT
 
     def apply(self, data:Any) -> list:
         _cv2 = CV2Utils.get_cv2()
@@ -25,6 +25,6 @@ if __name__ == '__main__':
         img_arr = img_f.read()
         img_data = ImageUtils.load(img_arr)
 
-    rst = ImageCannyEdgeDetectuin(stat_dict=None, arg_list=None).apply(img_data)
+    rst = ImageCannyEdgeDetection(stat_dict=None, arg_list=None).apply(img_data)
     print(rst[0])
     __cv2.imwrite(f"{image_path}/canny_rst.jpg", rst[0])
