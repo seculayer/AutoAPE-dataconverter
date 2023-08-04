@@ -18,8 +18,8 @@ class MinMaxNormal(ConvertAbstract):
         self.return_type = Constants.RETURN_TYPE_FLOAT
 
         try:
-            self.max = float(self.stat_dict["basic"]["max"])
-            self.min = float(self.stat_dict["basic"]["min"])
+            self.max = float(self.stat_dict["max"])
+            self.min = float(self.stat_dict["min"])
         except Exception as e:
             self.max = 0
             self.min = 0

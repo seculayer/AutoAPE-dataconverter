@@ -15,9 +15,9 @@ class ZScoreNormal(ConvertAbstract):
         super().__init__(**kwargs)
         try:
             # the mean of the normal distribution
-            self.mean = float(self.stat_dict["basic"]["mean"])
+            self.mean = float(self.stat_dict["average"])
             # the standard deviation of the normal distribution
-            self.stddev = float(self.stat_dict["global"]["std_dev"])
+            self.stddev = float(self.stat_dict["std_dev"])
         except:
             self.mean = 0
             self.stddev = 0
