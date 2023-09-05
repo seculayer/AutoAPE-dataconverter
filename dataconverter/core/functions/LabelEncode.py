@@ -10,39 +10,30 @@ from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
 
 
-class OneHotEncode(ConvertAbstract):
+class LabelEncode(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.unique_dict = {}
-        self.unique_count = 0
 
         for idx, key in enumerate(self.stat_dict.get("unique", {}).get("unique", {}).keys()):
             self.unique_dict[key] = idx
-            self.unique_count += 1
 
-        self.num_feat = self.unique_count
+        self.num_feat = 1
         self.return_type = Constants.RETURN_TYPE_INT
 
     def apply(self, data: Any) -> List[int]:
-        # ZERO
-        result: List[int] = [0] * self.unique_count
-
         # GET INDEX
         index = self.unique_dict.get(data)
-        if index:
-            result[index] = 1
-        else:
-            result[0] = 1
 
-        return result
+        return [index]
 
     def get_num_feat(self):
-        return self.unique_count
+        return self.num_feat
 
 
 if __name__ == "__main__":
-    one_hot_encode = OneHotEncode(
-        stat_dict={"unique": "0@COMMA@1", "uniqueCount": 2}, arg_list=[]
+    one_hot_encode = LabelEncode(
+        stat_dict={"unique": {"unique": {"0": 12, "1": 24}, "uniqueCount": 2}}, arg_list=[]
     )
 
     print(one_hot_encode.apply("0"))
