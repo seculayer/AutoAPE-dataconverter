@@ -24,8 +24,9 @@ class ImageCLAHE(ConvertAbstract):
         img2 = clahe.apply(img)
         kernel = np.ones((2, 2), np.uint8)
         opening = _cv2.morphologyEx(img2, _cv2.MORPH_OPEN, kernel)
+        _1to3channel = np.repeat(opening[:, :, np.newaxis], 3, -1)
 
-        return [opening]
+        return [_1to3channel]
 
 
 if __name__ == "__main__":

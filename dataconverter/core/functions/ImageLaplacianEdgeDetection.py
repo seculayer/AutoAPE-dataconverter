@@ -1,7 +1,10 @@
 from typing import Any, List
+import numpy as np
+
 from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
+
 
 class ImageLaplacianEdgeDetection(ConvertAbstract):
     def __init__(self, **kwargs):
@@ -9,12 +12,14 @@ class ImageLaplacianEdgeDetection(ConvertAbstract):
         self.num_feat = 1
         self.return_type = Constants.RETURN_TYPE_INT
 
-    def apply(self, data:Any) -> list:
+    def apply(self, data: Any) -> list:
         _cv2 = CV2Utils.get_cv2()
         img = _cv2.cvtColor(data, _cv2.COLOR_BGR2GRAY)
         laplacian = _cv2.Laplacian(img, -1, ksize=5)
+        _1to3channel = np.repeat(laplacian[:, :, np.newaxis], 3, -1)
 
-        return [laplacian]
+        return [_1to3channel]
+
 
 if __name__ == '__main__':
     from pycmmn.utils.ImageUtils import ImageUtils

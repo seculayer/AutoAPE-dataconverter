@@ -11,6 +11,7 @@ from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
 
+
 class Binarize(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -37,10 +38,11 @@ class Binarize(ConvertAbstract):
             평균 이하 -> 0
             평균 이상 -> 최댓값 : 255
         """
-        thresh = np.mean(img, axis=(0,1))
+        thresh = np.mean(img, axis=(0, 1))
         ret, binary = _cv2.threshold(img, thresh, 255, _cv2.THRESH_BINARY)
+        _1to3channel = np.repeat(binary[:, :, np.newaxis], 3, -1)
 
-        return[binary]
+        return[_1to3channel]
 
 
 if __name__ == "__main__":
