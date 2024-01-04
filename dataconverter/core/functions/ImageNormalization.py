@@ -1,7 +1,10 @@
 from typing import Any, List
+import numpy as np
+
 from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
+
 
 class ImageNormalization(ConvertAbstract):
     def __init__(self, **kwargs):
@@ -9,13 +12,13 @@ class ImageNormalization(ConvertAbstract):
         self.num_feat = 1
         self.return_type = Constants.RETURN_TYPE_INT
 
-    def apply(self, data:Any) -> list:
+    def apply(self, data: Any) -> list:
         _cv2 = CV2Utils.get_cv2()
         img = _cv2.cvtColor(data, _cv2.COLOR_BGR2GRAY)
         img_norm = _cv2.normalize(img, None, 0, 255, _cv2.NORM_MINMAX)
+        _1to3channel = np.repeat(img_norm[:, :, np.newaxis], 3, -1)
 
-        return [img_norm]
-
+        return [_1to3channel]
 
 
 if __name__ == '__main__':

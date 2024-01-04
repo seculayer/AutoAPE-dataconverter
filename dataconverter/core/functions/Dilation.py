@@ -4,6 +4,7 @@
 # Powered by Seculayer © 2021 Service Model Team, R&D Center.
 
 from typing import Any, List
+import numpy as np
 
 from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
@@ -41,10 +42,12 @@ class Dilation(ConvertAbstract):
              [1 1 1 1 1]
              [1 1 1 1 1]]
         """
-        kernel = _cv2.getStructuringElement(_cv2.MORPH_RECT, (5,5))
+        kernel = _cv2.getStructuringElement(_cv2.MORPH_RECT, (5, 5))
         dilation = _cv2.dilate(img, kernel, iterations=self.iterations)
+        _1to3channel = np.repeat(dilation[:, :, np.newaxis], 3, -1)
 
-        return [dilation]
+        return [_1to3channel]
+
 
 if __name__ == "__main__":
 

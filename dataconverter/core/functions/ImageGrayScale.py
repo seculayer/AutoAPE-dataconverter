@@ -1,7 +1,10 @@
 from typing import Any, List
+import numpy as np
+
 from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
+
 
 class ImageGrayScale(ConvertAbstract):
     def __init__(self, **kwargs):
@@ -12,8 +15,9 @@ class ImageGrayScale(ConvertAbstract):
     def apply(self, data: Any) -> list:
         _cv2 = CV2Utils.get_cv2()
         gray_scale = _cv2.cvtColor(data, _cv2.COLOR_BGR2GRAY)
+        _1to3channel = np.repeat(gray_scale[:, :, np.newaxis], 3, -1)
 
-        return [gray_scale]
+        return [_1to3channel]
 
 
 if __name__ == '__main__':
@@ -27,4 +31,3 @@ if __name__ == '__main__':
     rst = ImageGrayScale(stat_dict=None, arg_list=None).apply(img_data)
     print(rst[0])
     __cv2.imwrite(f"{image_path}/gray_rst.jpg", rst[0])
-

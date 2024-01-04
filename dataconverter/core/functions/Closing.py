@@ -4,10 +4,12 @@
 # Powered by Seculayer © 2021 Service Model Team, R&D Center.
 
 from typing import Any, List
+import numpy as np
 
 from pycmmn.utils.CV2Utils import CV2Utils
 from dataconverter.core.ConvertAbstract import ConvertAbstract
 from dataconverter.common.Constants import Constants
+
 
 class Closing(ConvertAbstract):
     def __init__(self, **kwargs):
@@ -40,10 +42,11 @@ class Closing(ConvertAbstract):
             [0 0 1 0 0]
             [0 0 1 0 0]]
        """
-        kernel = _cv2.getStructuringElement(_cv2.MORPH_CROSS, (5,5))
+        kernel = _cv2.getStructuringElement(_cv2.MORPH_CROSS, (5, 5))
         closing = _cv2.morphologyEx(img, _cv2.MORPH_CLOSE, kernel, iterations=self.iterations)
+        _1to3channel = np.repeat(closing[:, :, np.newaxis], 3, -1)
 
-        return [closing]
+        return [_1to3channel]
 
 
 if __name__ == "__main__":
@@ -59,4 +62,3 @@ if __name__ == "__main__":
 
         print(rst[0])
     __cv2.imwrite(f"{image_path}/closing_rst3.jpg", rst[0])
-
