@@ -5,31 +5,34 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class Replace(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
 
-    def apply(self, data: Any) -> list[str]:
+    def apply(self, data: Any) -> List[str]:
         result = ""
 
         # check blank
         if self._isBlank(data):
             return [result]
 
-        strOld = ""
-        strNew = ""
+        str_old = ""
+        str_new = ""
         if len(self.arg_list) >= 2:
-            strOld = self.arg_list[0]
-            strNew = self.arg_list[1]
+            str_old = self.arg_list[0]
+            str_new = self.arg_list[1]
         else:
             return [result]
 
-        result = data.replace(strOld, strNew)
+        result = data.replace(str_old, str_new)
 
         return [result]
 

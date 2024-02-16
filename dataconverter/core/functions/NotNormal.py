@@ -5,17 +5,19 @@
 
 from __future__ import annotations
 
-from typing import Union
+from typing import Union, List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class NotNormal(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
-    def apply(self, data: Union[str, float]) -> list[Union[str, float]]:
+    def apply(self, data: Union[str, float]) -> List[Union[str, float]]:
         if isinstance(data, float):
             return [data]
         else:
@@ -25,13 +27,15 @@ class NotNormal(ConvertAbstract):
                 # comma
                 data = data.replace("\\,", "#COMMA#")
             except Exception as e:
-                # print log for error
-                self.LOGGER.error(e)
+                pass
 
-            try:
-                data = float(data)
-            except Exception as e:
-                self.LOGGER.error(e)
+            if isinstance(data, list):
+                pass
+            else:
+                try:
+                    data = float(data)
+                except (ValueError, TypeError):
+                    pass
 
             return [data]
 

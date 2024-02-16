@@ -3,16 +3,18 @@
 # e-mail : syjo@seculayer.co.kr
 # Powered by Seculayer © 2018 AI-Core Team
 
-from dataconverter.core.ConvertAbstract import ConvertAbstract
 import re
+
+from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class RegexGet(ConvertAbstract):
-    _regex_pattern: re.Pattern
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._regex_pattern = re.compile(self.arg_list[0])
+        self.num_feat = 1
+        self.return_type = Constants.RETURN_TYPE_STRING
 
     def apply(self, data):
         result = ''
@@ -21,13 +23,9 @@ class RegexGet(ConvertAbstract):
         if self._isBlank(data):
             return [result]
 
-        try:
-            matches = self._regex_pattern.match(data)
-            if matches:
-                result = matches.groups()[0]
-        except Exception as e:
-            self.LOGGER.error(str(e))
-            result = ''
+        matches = self._regex_pattern.match(data)
+        if matches:
+            result = matches.groups()[0]
 
         return [result]
 

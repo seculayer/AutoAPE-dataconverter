@@ -3,15 +3,19 @@
 # e-mail : bmg8551@seculayer.co.kr
 # Powered by Seculayer © 2021 Service Model Team
 
-from dataconverter.core.ConvertAbstract import ConvertAbstract
 import re
 import urllib.parse as decode
+
+from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class NgramTokenizer(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.max_len = int(self.arg_list[0])
+        self.num_feat = self.max_len
+        self.return_type = Constants.RETURN_TYPE_STRING
 
     def apply(self, data):
         try:
@@ -20,8 +24,8 @@ class NgramTokenizer(ConvertAbstract):
             dec_data = data
 
         temp = dec_data.replace('#CRLF#', '').replace(' ', '')  # CRLF가 붙어 올 경우 삭제
-        lpFind = set(re.findall(r'\W', temp))  # 정규화를 통한 특수문자 검색
-        for token in lpFind:  # 찾은 특수문자를 치환 해서 토크나이징 하는곳
+        lp_find = set(re.findall(r'\W', temp))  # 정규화를 통한 특수문자 검색
+        for token in lp_find:  # 찾은 특수문자를 치환 해서 토크나이징 하는곳
             temp = temp.replace(str(token), ' ' + str(token) + ' ').replace("  ", " ")
 
         return self.ngram(temp, int(self.arg_list[1]), int(self.arg_list[2]))
@@ -44,13 +48,13 @@ class NgramTokenizer(ConvertAbstract):
 
         ngrams = [text[x:x + num_gram] for x in range(0, len(text))]
 
-        lpFirst = ngrams[:len(ngrams) - (num_gram - 1)]  # 전체 데이터에서 num gram 이 잘된 데이터
-        lpSecend = ngrams[len(ngrams) - (num_gram - 1):]  # 전체 데이터에서 num gram 이 부족한 데이터 끝쪽
+        lp_first = ngrams[:len(ngrams) - (num_gram - 1)]  # 전체 데이터에서 num gram 이 잘된 데이터
+        lp_secend = ngrams[len(ngrams) - (num_gram - 1):]  # 전체 데이터에서 num gram 이 부족한 데이터 끝쪽
 
-        for lpTemp in lpSecend:  # 부족한 데이터에 PADDING
-            for ix in range(abs(num_gram - len(lpTemp))):  # 그램에 갯수에 맞을때까지
-                lpTemp.append('#PADDING#')  # PADDING 으로 채움
-            lpFirst.append(lpTemp)  # 그것을 잘된 데이터에 붙인다.
+        for lp_temp in lp_secend:  # 부족한 데이터에 PADDING
+            for ix in range(abs(num_gram - len(lp_temp))):  # 그램에 갯수에 맞을때까지
+                lp_temp.append('#PADDING#')  # PADDING 으로 채움
+            lp_first.append(lp_temp)  # 그것을 잘된 데이터에 붙인다.
 
         result_len = len(ngrams)
 

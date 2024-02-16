@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Union
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class IPTransferMerge(ConvertAbstract):
@@ -17,19 +18,16 @@ class IPTransferMerge(ConvertAbstract):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.num_feat = 1
+        self.num_feat = 6
+        self.return_type = Constants.RETURN_TYPE_STRING
 
     # 토크나이징 하는곳
     def apply(self, data: Union[tuple, list]):
-        try:
-            data1 = data[0]
-            data2 = data[1]
+        data1 = data[0]
+        data2 = data[1]
 
-            row = data1 + "." + data2
-            row = [row] * 6
-        except Exception as e:
-            # self.LOGGER.error(e)
-            row = ["0", "0", "0", "0", "0", "0"]
+        row = data1 + "." + data2
+        row = [row] * 6
 
         return row
 

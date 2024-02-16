@@ -4,12 +4,13 @@
 # Powered by Seculayer © 2017-2018 AI Core Team, Intelligence R&D Center.
 
 from __future__ import annotations
-
+from typing import List
 import re
 import urllib.parse as decode
 from operator import itemgetter
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 # fmt: off
 SPECIAL_WORD_UPPER_ARR = [
@@ -35,6 +36,7 @@ class SpecialWordChar(ConvertAbstract):
         self.max_len = int(self.arg_list[0])
         self.preprocessing_type = str(self.arg_list[1])
         self.num_feat = self.max_len
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
         # fmt: off
         special_word_tokens = [
@@ -452,139 +454,127 @@ class SpecialWordChar(ConvertAbstract):
 
         self.sorted_sw_token = sorted(self.SWtoken, key=itemgetter(2), reverse=True)
 
-    def apply(self, data) -> list[float]:
-        try:
-            data = data.replace("\\/", "/")
-            if self.preprocessing_type == "RCE":
-                for rce in SPECIAL_WORD_UPPER_ARR:
-                    if rce[0] != " ":
-                        data = data.replace(
-                            str(rce[0]), " " + str(rce[0]) + " "
-                        ).replace("  ", " ")
-
-            ####################################kps####################################
-            data = (
-                data.replace("\r\n", " ")
-                .replace("\n", " ")
-                .replace("\t", " ")
-                .replace("  ", " ")
-                .replace("  ", " ")
-            )
-            ####################################kps####################################
-            ## URL Decode
-            _input = data.replace("CCOMMAA", ",")
-            ####################################kps####################################
-            # _input = _input.replace(",", "CCOMMAA")
-            ####################################kps####################################
-            try:
-                iLoopCnt = 0
-                val = ""
-                while val != _input or iLoopCnt <= 5:
-                    val = _input
-                    iLoopCnt += 1
-                    _input = decode.unquote(_input.upper())
-                dec_data = _input.lower()
-            except:
-                dec_data = str(_input).lower()
-
-                dec_data = (
-                    dec_data.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
-                )
-            try:
-                dec_data = re.findall(r"(?i)(get.*|post.*)", dec_data)[0]
-                # self.LOGGER.get_logger().info(dec_data)
-            except Exception as e:
-                dec_data = dec_data
-                # self.LOGGER.debug(e)
-            ####################################kps####################################
-            # IpFind = list(set(re.findall(r'[\W_]',dec_data)))
-            #
-            # for ix in range(10):
-            #     IpFind.append(ix)
-            ####################################kps####################################
-            ####################################kps####################################
-            IpFind = list(set(re.findall(r"[\W_0-9]", dec_data)))
-            ####################################kps####################################
-            for token in IpFind:
-                if token != " ":
-                    dec_data = dec_data.replace(
-                        str(token), " " + str(token) + " "
+    def apply(self, data) -> List[float]:
+        data = data.replace("\\/", "/")
+        if self.preprocessing_type == "RCE":
+            for rce in SPECIAL_WORD_UPPER_ARR:
+                if rce[0] != " ":
+                    data = data.replace(
+                        str(rce[0]), " " + str(rce[0]) + " "
                     ).replace("  ", " ")
 
-            payload = " " + dec_data + " "
-            payload = payload.strip()
-            IpCompare = []
+        ####################################kps####################################
+        data = (
+            data.replace("\r\n", " ")
+            .replace("\n", " ")
+            .replace("\t", " ")
+            .replace("  ", " ")
+            .replace("  ", " ")
+        )
+        ####################################kps####################################
+        ## URL Decode
+        _input = data.replace("CCOMMAA", ",")
+        ####################################kps####################################
+        # _input = _input.replace(",", "CCOMMAA")
+        ####################################kps####################################
+        try:
+            iLoopCnt = 0
+            val = ""
+            while val != _input or iLoopCnt <= 5:
+                val = _input
+                iLoopCnt += 1
+                _input = decode.unquote(_input.upper())
+            dec_data = _input.lower()
+        except:
+            dec_data = str(_input).lower()
 
-            for word, change, _ in self.sorted_sw_token:
-                payload = payload.replace(" " + word + " ", " ksshin" + change + " ")
-                IpCompare.append("ksshin" + change)
-
-            ####################################kps####################################
-            # strTemp =""
-            # resultPayload = payload.split(" ")
-            #
-            # for ChangeWord in resultPayload:
-            #     if ChangeWord in IpFind or ChangeWord in IpCompare and ChangeWord != " ":
-            #         strTemp = strTemp+ " " + ChangeWord.replace("ksshin", "")
-            #
-            # print(strTemp)
-            # result = list()
-            #
-            # for i, ch in enumerate(strTemp):
-            #     if ch != " ":
-            #         result.append(ord(ch))
-            ####################################kps####################################
-            ####################################kps####################################
-            resultPayload = payload.split(" ")
-            result = []
-
-            for ChangeWord in resultPayload:
-                try:
-                    if (
-                        (ChangeWord in IpFind or ChangeWord in IpCompare)
-                        and ChangeWord != " "
-                        and not ChangeWord.isdigit()
-                    ):
-                        result.append(float(ord(ChangeWord.replace("ksshin", ""))))
-                except Exception as e:
-                    pass
-
-            ####################################kps####################################
-            ## padding
-            # iMax = self.max_len - 4
-            iMax = self.max_len
-            padding0 = []
-            bufferLen = len(result)
-            if bufferLen < iMax:
-                # padding0.extend([0.] * 2)
-                padding0.extend(result)
-                padding1 = [255.0] * (iMax - bufferLen)
-                padding0.extend(padding1)
-                # padding0.extend([0.] * 2)
-            elif bufferLen == iMax:
-                # padding0.extend([0.] * 2)
-                padding0.extend(result)
-                # padding0.extend([0.] * 2)
-
-            elif bufferLen > iMax:
-                # padding0.extend([0.] * 2)
-                padding0.extend(result[:iMax])
-                # padding0.extend([0.] * 2)
-
-            result = padding0
-
-            return result
-
-            # if result_len < self.max_len :
-            #     padding = [255]*(self.max_len - result_len)
-            #     result.extend(padding)
-            #     return result
-            # else :
-            #     return result[:self.max_len]
-
+            dec_data = (
+                dec_data.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+            )
+        try:
+            dec_data = re.findall(r"(?i)(get.*|post.*)", dec_data)[0]
+            # self.LOGGER.get_logger().info(dec_data)
         except Exception as e:
-            self.LOGGER.debug(e, exc_info=True)
-            return [255.0] * self.max_len
+            dec_data = dec_data
+            # self.LOGGER.debug(e)
+        ####################################kps####################################
+        # IpFind = list(set(re.findall(r'[\W_]',dec_data)))
+        #
+        # for ix in range(10):
+        #     IpFind.append(ix)
+        ####################################kps####################################
+        ####################################kps####################################
+        IpFind = list(set(re.findall(r"[\W_0-9]", dec_data)))
+        ####################################kps####################################
+        for token in IpFind:
+            if token != " ":
+                dec_data = dec_data.replace(
+                    str(token), " " + str(token) + " "
+                ).replace("  ", " ")
+
+        payload = " " + dec_data + " "
+        payload = payload.strip()
+        IpCompare = []
+
+        for word, change, _ in self.sorted_sw_token:
+            payload = payload.replace(" " + word + " ", " ksshin" + change + " ")
+            IpCompare.append("ksshin" + change)
+
+        ####################################kps####################################
+        # strTemp =""
+        # resultPayload = payload.split(" ")
+        #
+        # for ChangeWord in resultPayload:
+        #     if ChangeWord in IpFind or ChangeWord in IpCompare and ChangeWord != " ":
+        #         strTemp = strTemp+ " " + ChangeWord.replace("ksshin", "")
+        #
+        # print(strTemp)
+        # result = list()
+        #
+        # for i, ch in enumerate(strTemp):
+        #     if ch != " ":
+        #         result.append(ord(ch))
+        ####################################kps####################################
+        ####################################kps####################################
+        resultPayload = payload.split(" ")
+        result = []
+
+        for ChangeWord in resultPayload:
+            try:
+                if (
+                    (ChangeWord in IpFind or ChangeWord in IpCompare)
+                    and ChangeWord != " "
+                    and not ChangeWord.isdigit()
+                ):
+                    result.append(float(ord(ChangeWord.replace("ksshin", ""))))
+            except Exception as e:
+                pass
+
+        ####################################kps####################################
+        ## padding
+        # iMax = self.max_len - 4
+        iMax = self.max_len
+        padding0 = []
+        bufferLen = len(result)
+        if bufferLen < iMax:
+            # padding0.extend([0.] * 2)
+            padding0.extend(result)
+            padding1 = [255.0] * (iMax - bufferLen)
+            padding0.extend(padding1)
+            # padding0.extend([0.] * 2)
+        elif bufferLen == iMax:
+            # padding0.extend([0.] * 2)
+            padding0.extend(result)
+            # padding0.extend([0.] * 2)
+
+        elif bufferLen > iMax:
+            # padding0.extend([0.] * 2)
+            padding0.extend(result[:iMax])
+            # padding0.extend([0.] * 2)
+
+        result = padding0
+
+        return result
 
     def get_num_feat(self):
         return self.max_len

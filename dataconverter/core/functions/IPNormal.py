@@ -4,8 +4,10 @@
 # Powered by Seculayer © 2021 Service Model Team
 
 from __future__ import annotations
+from typing import List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class IPNormal(ConvertAbstract):
@@ -15,8 +17,9 @@ class IPNormal(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 4
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
-    def apply(self, data: str) -> list[float]:
+    def apply(self, data: str) -> List[float]:
         if not isinstance(data, (str, bytes)):
             return [0.0, 0.0, 0.0, 0.0]
 
@@ -25,12 +28,7 @@ class IPNormal(ConvertAbstract):
             return [0.0, 0.0, 0.0, 0.0]
 
         norm = self._max - self._min
-        try:
-            return [(float(ip) - self._min) / norm for ip in ip_split]
-        except Exception as e:
-            # print log for error
-            self.LOGGER.error(str(e))
-            return [0.0, 0.0, 0.0, 0.0]
+        return [(float(ip) - self._min) / norm for ip in ip_split]
 
 
 if __name__ == "__main__":

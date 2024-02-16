@@ -4,8 +4,10 @@
 # Powered by Seculayer © 2021 Service Model Team
 
 from __future__ import annotations
+from typing import List
 
 from dataconverter.core.ConvertAbstract import ConvertAbstract
+from dataconverter.common.Constants import Constants
 
 
 class EqpDtTokenizer(ConvertAbstract):
@@ -16,14 +18,11 @@ class EqpDtTokenizer(ConvertAbstract):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.num_feat = 2
+        self.return_type = Constants.RETURN_TYPE_FLOAT
 
     # 토크나이징 하는곳
-    def apply(self, data: str) -> list[float]:
-        try:
-            return [float(data[8:10]), float(data[10:12])]
-        except Exception as e:
-            # self.LOGGER.error(e)
-            return [99.0, 99.0]
+    def apply(self, data: str) -> List[float]:
+        return [float(data[8:10]), float(data[10:12])]
 
 
 if __name__ == "__main__":
