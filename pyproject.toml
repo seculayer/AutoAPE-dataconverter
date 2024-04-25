@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "dataconverter"
-version = "4.0-dev"
+version = "1.0.0"
 description = "AutoML Project: Data Converter"
 authors = ["Jin Kim <jin.kim@seculayer.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7, <3.11"
 numpy = "^1.21.5"
-pycmmn = { git = "https://ssdlc-bitbucket.seculayer.com:8443/scm/slaism/autoape-pycmmn.git", rev = "main" }
+pycmmn = { git = "https://ssdlc-bitbucket.seculayer.com:8443/scm/slaism/autoape-pycmmn.git", rev = "develop" }
 
 [tool.poetry.dev-dependencies]
 black = "^22"
